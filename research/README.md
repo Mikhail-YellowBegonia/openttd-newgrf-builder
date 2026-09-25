@@ -2,6 +2,16 @@
 
 本目录用于把“可验证的 NewGRF 约束”与具体实现决策分开记录。调研优先引用官方规范和工具项目自身文档。
 
+## 当前结论
+
+本项目的新主线是“AI 生成/修整 2D 建筑素材 + 程序化 NewGRF 编译”，不是体素建模再渲染。仓库中已有的 MagicaVoxel/GoRender 代码属于先期调研遗留路径，暂不作为新自动化流程的输入或依赖。
+
+第一轮标准已经拆成三份：
+
+- [建筑 NewGRF 结构](building-newgrf-standard.md)：House feature、Action 0/1/2/3 和构建产物；
+- [建筑精灵标准](building-sprite-standard.md)：32bpp、Info version 32、zoom、锚点、透明和兼容策略；
+- [素材归档标准](asset-archive-standard.md)：素材身份、来源、生成记录、人工处理、QA 和发布闸门。
+
 ## 第一批问题
 
 - House feature 的 Action 0 属性与 callback 最小集合是什么？
@@ -21,6 +31,13 @@
 - [NML documentation](https://www.tt-wiki.net/wiki/NMLTutorial)
 - [grf-py](https://github.com/citymania-org/grf-py)
 - [GoRender](https://github.com/mattkimber/gorender)
+
+## 证据等级
+
+- **规范**：直接来自 GRFSpecs、OpenTTD/NML 或 grf-py 文档；
+- **实验**：由最小 GRF 和游戏内观察确认；
+- **决策**：项目为自动化和内容质量做出的约束；
+- **待验证**：规范没有直接回答，必须做实验后才能进入正式版本。
 
 ## 产出格式
 

@@ -1,5 +1,7 @@
 # 素材工作区
 
+体素建模和 GoRender 是先期技术路线的遗留内容，不属于当前素材标准。当前主线是 2D/2.5D 建筑图像素材，经统一裁切、锚点和 zoom 处理后进入 NewGRF 编译。
+
 AI 生成素材、实景参考和人工处理中间文件体量可能很大。本目录只提交小型、可审计的元数据和明确允许再分发的项目素材；原始大文件后续应使用对象存储或 Git LFS，并在清单中记录校验和。
 
 ## 目录约定
@@ -18,4 +20,4 @@ AI 生成素材、实景参考和人工处理中间文件体量可能很大。�
 4. 人工修改必须保留可编辑源文件并记录作者。
 5. 只有 `rights_status=approved` 且 `qa_status=approved` 的素材才能进入发布构建。
 
-`manifest.csv` 当前仅定义最小字段，字段会随第一轮原型调整。
+详细归档约束见 [`research/asset-archive-standard.md`](../research/asset-archive-standard.md)。`manifest.csv` 当前仅定义最小字段，字段会随第一轮原型调整。
