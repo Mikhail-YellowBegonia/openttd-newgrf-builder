@@ -6,6 +6,7 @@
 :hidden:
 changelog
 buildings
+roadmap_zh
 ```
 
 ---
