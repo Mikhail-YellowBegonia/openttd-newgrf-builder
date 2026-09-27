@@ -5,6 +5,7 @@ __pycache__
 .cache
 .nmlcache
 grfcodec-unpacked*/
+assets/references/*-unpacked*/
 render
 *.code-workspace
 .directory
