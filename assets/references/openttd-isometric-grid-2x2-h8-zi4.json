@@ -1,0 +1,44 @@
+{
+  "schema": 1,
+  "template": "/Users/Administrator/Desktop/kos/ttd/templates/isometric-2x2-h8/spec.json",
+  "template_id": "isometric-2x2-h8",
+  "zoom": "zi4",
+  "canvas": [
+    1024,
+    1536
+  ],
+  "anchor": [
+    512,
+    1408
+  ],
+  "tile_px": [
+    256,
+    128
+  ],
+  "tile_edge_px": [
+    128,
+    64
+  ],
+  "subdivisions_per_tile_edge": 8,
+  "antialiasing": false,
+  "background_rgb": [
+    242,
+    244,
+    240
+  ],
+  "minor_grid_rgb": [
+    184,
+    207,
+    205
+  ],
+  "medium_grid_rgb": [
+    111,
+    157,
+    157
+  ],
+  "major_grid_rgb": [
+    45,
+    91,
+    105
+  ]
+}
