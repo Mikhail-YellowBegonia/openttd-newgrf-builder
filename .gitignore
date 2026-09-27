@@ -4,6 +4,7 @@ __pycache__
 /*.vox
 .cache
 .nmlcache
+grfcodec-unpacked*/
 render
 *.code-workspace
 .directory
