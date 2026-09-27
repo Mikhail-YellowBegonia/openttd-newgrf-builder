@@ -22,3 +22,21 @@
 ```sh
 .venv/bin/python -m tools.isometric_grid
 ```
+
+## AI 工作网格与 TTD 验收网格
+
+生图模型通常更熟悉 30° 轴、120° 地面夹角。因此另有
+`ai-isometric-grid-120-2x2-h8-zi4.png`，专门用于 AI 重绘；它不是最终
+NewGRF 的几何标准。
+
+- AI 工作网格：120°，用于生成体块、立面、屋顶、光影和纹理；
+- TTD 验收网格：126.87°，用于最后的几何检查和切片；
+- 两者之间不采用单一全局变换作为最终修正；后续工作台应支持对屋顶、左墙、右墙等主要平面分别进行四边形映射。
+
+生成 AI 工作网格：
+
+```sh
+.venv/bin/python -m tools.isometric_grid \
+  --projection ai120 \
+  --output assets/references/ai-isometric-grid-120-2x2-h8-zi4.png
+```

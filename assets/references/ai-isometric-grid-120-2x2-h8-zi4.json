@@ -17,11 +17,11 @@
   ],
   "tile_edge_px": [
     128,
-    64
+    74
   ],
-  "projection": "ttd",
-  "edge_angle_deg": 26.56505117707799,
-  "ground_corner_angle_deg": 126.86989764584402,
+  "projection": "ai120",
+  "edge_angle_deg": 30.0,
+  "ground_corner_angle_deg": 120.0,
   "subdivisions_per_tile_edge": 8,
   "antialiasing": false,
   "background_rgb": [
