@@ -1,0 +1,2 @@
+# Optional dependencies for the historical grf-py / GoRender prototype path.
+agrf @ git+https://github.com/ahyangyi/agrf@main

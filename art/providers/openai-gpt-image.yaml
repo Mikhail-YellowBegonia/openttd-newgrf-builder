@@ -1,0 +1,23 @@
+provider: openai
+model: gpt-image-2
+quality: high
+size: 768x1408
+output_format: png
+source_zoom: zi4
+resampling_for_lod: nearest
+template: templates/isometric-1x1-h8/spec.json
+reference_inputs:
+  - role: style_and_isometric_composition
+    path: assets/references/style/<selected-style-reference>.png
+  - role: architecture_and_materials
+    path: assets/references/architecture/<selected-architecture-reference>.png
+  - role: optional_mass_sketch
+    path: assets/references/sketches/<optional-sketch>.png
+guide_for_model: false
+guide_for_postprocess: templates/isometric-1x1-h8/zi4.guide.png
+postprocess:
+  apply_template_mask: true
+  reject_pixels_outside_mask: true
+  derive_zi2_scale: 2
+  derive_normal_scale: 4
+  derive_resampling: nearest

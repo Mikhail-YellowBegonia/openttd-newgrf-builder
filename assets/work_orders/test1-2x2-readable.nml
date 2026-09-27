@@ -1,0 +1,114 @@
+/*
+ * test1-2x2-readable.nml
+ *
+ * Human-readable NML reference for work order test1-2x2.
+ * The production build is generated from the manifest by house/nml_gen.py.
+ * This standalone file expresses the same House definition using standard
+ * NML syntax so that the generated Action 0/1/2/3 logic can be reviewed.
+ *
+ * Source art:
+ *   assets/work/test1-2x2-zi4.png
+ * Calibration:
+ *   source origin = (553, 715)
+ *   source X axis = (-520, -288)
+ *   source Y axis = (532, -301)
+ *   square ground tile = 611.25 source pixels
+ *   projection angle = 29.75 degrees
+ *
+ * The full-canvas building image is attached to the north tile. The other
+ * three tiles deliberately use transparent sprites: the game then shows the
+ * terrain behind them. This matches the current approved art treatment.
+ */
+
+grf {
+    grfid: "__\03\06";
+    name: string(STR_GRF_NAME);
+    desc: string(STR_GRF_DESC);
+    version: 0;
+    min_compatible_version: 0;
+}
+
+/*
+ * The same approved 4x master is reduced with nearest-neighbour filtering,
+ * matching the current 32bpp/4x pipeline:
+ *   normal = 256x384, zi2 = 512x768, zi4 = 1024x1536.
+ */
+spriteset(test1_full, ZOOM_LEVEL_NORMAL, BIT_DEPTH_32BPP,
+           "assets/work_orders/test1-2x2-nml/full-normal.png") {
+    [0, 0, 256, 384, -128, -352, NOCROP]
+}
+alternative_sprites(test1_full, ZOOM_LEVEL_IN_2X, BIT_DEPTH_32BPP,
+                    "assets/work_orders/test1-2x2-nml/full-zi2.png") {
+    [0, 0, 512, 768, -256, -704, NOCROP]
+}
+alternative_sprites(test1_full, ZOOM_LEVEL_IN_4X, BIT_DEPTH_32BPP,
+                    "assets/work_orders/test1-2x2-nml/full-zi4.png") {
+    [0, 0, 1024, 1536, -512, -1408, NOCROP]
+}
+
+spriteset(test1_empty, ZOOM_LEVEL_NORMAL, BIT_DEPTH_32BPP,
+           "assets/work_orders/test1-2x2-nml/empty-normal.png") {
+    [0, 0, 1, 1, 0, 0, NOCROP]
+}
+alternative_sprites(test1_empty, ZOOM_LEVEL_IN_2X, BIT_DEPTH_32BPP,
+                    "assets/work_orders/test1-2x2-nml/empty-zi2.png") {
+    [0, 0, 1, 1, 0, 0, NOCROP]
+}
+alternative_sprites(test1_empty, ZOOM_LEVEL_IN_4X, BIT_DEPTH_32BPP,
+                    "assets/work_orders/test1-2x2-nml/empty-zi4.png") {
+    [0, 0, 1, 1, 0, 0, NOCROP]
+}
+
+spritelayout test1_full_layout {
+    ground {
+        sprite: GROUNDSPRITE_NORMAL;
+    }
+    building {
+        sprite: test1_full;
+        xextent: 16;
+        yextent: 16;
+        zextent: 16;
+    }
+}
+
+spritelayout test1_empty_layout {
+    ground {
+        sprite: GROUNDSPRITE_NORMAL;
+    }
+    building {
+        sprite: test1_empty;
+        xextent: 16;
+        yextent: 16;
+        zextent: 16;
+    }
+}
+
+/* Only the north tile owns the full-canvas image. */
+switch(FEAT_HOUSES, SELF, test1_2x2_layout, house_tile) {
+    HOUSE_TILE_NORTH: test1_full_layout;
+    test1_empty_layout;
+}
+
+item(FEAT_HOUSES, test1_2x2, -1, HOUSE_SIZE_2X2) {
+    property {
+        /* 20, 21, 22, 23 are assigned to the four 2x2 tiles. */
+        substitute: 20;
+        name: string(STR_HOUSE_TOWN);
+        probability: 1; // NML units; emits raw Action 0 value 16
+        population: 1;
+
+        /* 0xF81F: all town zones, all climates, above snowline. */
+        availability_mask: [ALL_TOWNZONES, bitmask(CLIMATE_TEMPERATE, CLIMATE_ARCTIC, CLIMATE_TROPIC, CLIMATE_TOYLAND, ABOVE_SNOWLINE)];
+
+        /*
+         * For a multi-tile House NML adds the 2x2 size bit (0x10) to the
+         * north tile and propagates only bit 0x20 to the attached tiles.
+         * Therefore this becomes 0x30, 0x20, 0x20, 0x20 in Action 0.
+         */
+        building_flags: 0x20;
+    }
+
+    graphics {
+        default: test1_2x2_layout;
+    }
+}

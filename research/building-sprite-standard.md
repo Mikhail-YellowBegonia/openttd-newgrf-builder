@@ -25,7 +25,7 @@ Info version 32 支持：
 
 对于 normal zoom，游戏 tile 的参考网格是 64×32；`zi2` 约为 128×64，`zi4` 约为 256×128。建筑本身可以超出一个 tile，但必须使用统一的地面中心和锚点规则。
 
-“最现代的 32bpp 精灵分辨率”在工程上应解释为：**Info version 32 + 32bpp + 至少 normal/zi2，必要时 zi4**，而不是任意放大 PNG。每个 zoom 应独立检查轮廓、阴影和细节，禁止简单 nearest-neighbor 放大作为最终素材。
+“最现代的 32bpp 精灵分辨率”在工程上解释为：**Info version 32 + 32bpp + zi4 母版**。normal 和 zi2 由 zi4 进行 4 倍、2 倍整数最近邻降采样得到；禁止为低倍率重新生图、重新裁切或使用双线性插值。
 
 ## 3. 精灵记录字段
 
@@ -40,6 +40,18 @@ Info version 32 支持：
 - flags：如 `nocrop`, `chunked`。
 
 透明边界、锚点和尺寸属于逻辑数据，不能仅存在于美术软件工程文件里；它们必须进入机器可读 manifest。
+
+## 3.1 项目贴图接受标准
+
+项目接受的最终贴图是与模板画布完全一致的 RGBA PNG。模板不是 NewGRF 标准文件，而是本项目对 AI 出图和后处理的确定性约束，包含 `spec.json`、每个 zoom 的 `mask.png` 和 `guide.png`。
+
+- `mask.png` 是最大绘制包络：mask 为黑色的像素必须保持 alpha=0；包络内部可以继续透明；
+- `guide.png` 只用于参考，包含 tile 菱形、占地分割线、中心锚点和 40 米标尺，不得进入最终 sprite；
+- 1 tile 固定按 40 米理解；normal/zi2/zi4 的 tile 网格分别为 64x32、128x64、256x128；
+- manifest 必须记录 `template_spec`、`zoom_level=zi4`、`mask_path`、`anchor_x` 和 `anchor_y`，构建时校验画布、锚点和 mask；
+- 不允许把非透明像素放在最大包络之外，也不允许用自动紧裁改变建筑地面锚点。
+
+模板生成命令和图形含义见 [`templates/README.md`](../templates/README.md)。
 
 ## 4. 建筑方向与施工阶段
 

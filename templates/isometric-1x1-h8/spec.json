@@ -1,0 +1,141 @@
+{
+  "schema": 1,
+  "template_id": "isometric-1x1-h8",
+  "projection": "openttd_isometric",
+  "metres_per_tile": 40,
+  "footprint": "1x1",
+  "height_tiles": 8,
+  "height_metres": 320,
+  "master_zoom": "zi4",
+  "screen_projection": {
+    "tile_edge_angle_deg": 26.565051,
+    "ground_corner_angle_deg": 126.869898,
+    "note": "These are screen-space angles for the 2:1 OpenTTD tile projection; they are not the 120-degree world-axis angle."
+  },
+  "generation_rule": "AI generates zi4 once; lower zooms are integer nearest-neighbour reductions",
+  "guide_semantics": {
+    "white": "maximum allowed drawing area; not required fill",
+    "black": "outside the allowed drawing area",
+    "red_arrow": "one ground tile edge = 40 metres"
+  },
+  "drawing_rule": "final RGBA alpha must be zero wherever the corresponding mask is zero",
+  "zooms": {
+    "normal": {
+      "scale": 1,
+      "canvas": [
+        192,
+        352
+      ],
+      "mask": "normal.mask.png",
+      "guide": "normal.guide.png",
+      "anchor": [
+        96,
+        320
+      ],
+      "tile_px": [
+        64,
+        32
+      ],
+      "tile_polygons": {
+        "0,0": [
+          [
+            96,
+            288
+          ],
+          [
+            128,
+            304
+          ],
+          [
+            96,
+            320
+          ],
+          [
+            64,
+            304
+          ]
+        ]
+      },
+      "derived_from": "zi4",
+      "resampling": "nearest"
+    },
+    "zi2": {
+      "scale": 2,
+      "canvas": [
+        384,
+        704
+      ],
+      "mask": "zi2.mask.png",
+      "guide": "zi2.guide.png",
+      "anchor": [
+        192,
+        640
+      ],
+      "tile_px": [
+        128,
+        64
+      ],
+      "tile_polygons": {
+        "0,0": [
+          [
+            192,
+            576
+          ],
+          [
+            256,
+            608
+          ],
+          [
+            192,
+            640
+          ],
+          [
+            128,
+            608
+          ]
+        ]
+      },
+      "derived_from": "zi4",
+      "resampling": "nearest"
+    },
+    "zi4": {
+      "scale": 4,
+      "canvas": [
+        768,
+        1408
+      ],
+      "mask": "zi4.mask.png",
+      "guide": "zi4.guide.png",
+      "anchor": [
+        384,
+        1280
+      ],
+      "tile_px": [
+        256,
+        128
+      ],
+      "tile_polygons": {
+        "0,0": [
+          [
+            384,
+            1152
+          ],
+          [
+            512,
+            1216
+          ],
+          [
+            384,
+            1280
+          ],
+          [
+            256,
+            1216
+          ]
+        ]
+      },
+      "derived_from": null,
+      "resampling": null
+    }
+  }
+}

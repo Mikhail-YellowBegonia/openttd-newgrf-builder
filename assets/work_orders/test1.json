@@ -1,0 +1,53 @@
+{
+  "schema": 1,
+  "work_order_id": "test1",
+  "building_id": "cn_test_rectangular_001",
+  "house_id": "128",
+  "building_family": "urban_block",
+  "density": "urban",
+  "era": "post_2000",
+  "footprint": "1x1",
+  "height_tiles": 8,
+  "source": {
+    "image": "assets/generated/test1.png",
+    "generator": {
+      "provider": "",
+      "model": "",
+      "model_version": "",
+      "prompt_version": "",
+      "seed": ""
+    }
+  },
+  "references": {
+    "style": "",
+    "architecture": "",
+    "sketch": ""
+  },
+  "calibration": {
+    "source_origin": [553, 715],
+    "source_x_axis": [-520, -288],
+    "source_y_axis": [532, -301],
+    "ground_tile_size": 611.25,
+    "ground_tile_policy": "square_max",
+    "axis_scope": "footprint",
+    "target_template": "templates/isometric-1x1-h8/spec.json",
+    "notes": "测试：原图疑似 2x2 建筑，暂按 1x1 处理。两条地基测量长度为 594.43 与 611.25，统一采用较长边 611.25；轴向量从下角原点指向两个上角。"
+  },
+  "processing": {
+    "saturation": 1.0,
+    "background": {
+      "method": "none"
+    }
+  },
+  "deliverables": {
+    "preview": "assets/work/test1-calibration.png",
+    "approved_zi4": "",
+    "mask": ""
+  },
+  "review": {
+    "rights_status": "review",
+    "qa_status": "pending",
+    "reviewer": "",
+    "notes": "仅用于工单与投影流程测试，尚未确认 1x1 语义。"
+  }
+}

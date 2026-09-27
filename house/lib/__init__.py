@@ -1,1 +1,1 @@
-from .base import AHouse
+from .base import AHouse, AMultiTileHouse

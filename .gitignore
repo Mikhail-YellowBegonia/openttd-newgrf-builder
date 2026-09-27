@@ -3,6 +3,7 @@ __pycache__
 *.pyc
 /*.vox
 .cache
+.nmlcache
 render
 *.code-workspace
 .directory

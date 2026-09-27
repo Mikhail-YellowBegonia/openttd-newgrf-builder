@@ -1,13 +1,14 @@
 #!/usr/bin/env python
-import grf
 import argparse
+import os
+import shutil
+import subprocess
 from pathlib import Path
-from house.lib.docgen import gen_docs, build_docs
-from house.lib.parameters import parameter_list
-from house.houses.test.houses import houses
 
 
 def get_string_manager():
+    import grf
+
     s = grf.StringManager()
     s.import_lang_dir("house/lang", default_lang_file="english-uk.lng")
 
@@ -15,55 +16,30 @@ def get_string_manager():
 
 
 def gen(args):
-    s = get_string_manager()
-    g = grf.NewGRF(
-        grfid=b"__\03\06",
-        name=s["STR_GRF_NAME"],
-        description=s["STR_GRF_DESC"],
-        version=0,
-        min_compatible_version=0,
-        id_map_file="house/id_map.json",
-        sprite_cache_path="house/.cache",
-        url="https://www.tt-forums.net/viewtopic.php?t=91092",
-        strings=s,
-        preferred_blitter=grf.NewGRF.BLITTER_BPP_32,
-    )
+    from house.nml_gen import build
 
-    g.add(
-        grf.ComputeParameters(
-            target=0x40,
-            operation=0x00,
-            if_undefined=False,
-            source1=0x11,
-            source2=0xFE,
-            value=b"\xff\xff\x00\x00",
-        )
-    )
+    build()
 
-    g.add_int_parameter(
-        name=s["STR_PARAM_VANILLA"],
-        description=s["STR_PARAM_VANILLA_DESC"],
-        default=0,
-        limits=(0, 1),
-        enum={0: s["STR_PARAM_VANILLA_DISABLED"], 1: s["STR_PARAM_VANILLA_ENABLED"]},
+    nmlc = os.environ.get("NMLC") or shutil.which("nmlc") or ".venv/bin/nmlc"
+    subprocess.run(
+        [
+            nmlc,
+            "-l",
+            "house/lang",
+            "--default-lang=english-uk.lng",
+            "building/building.nml",
+            "--grf",
+            "building.grf",
+        ],
+        check=True,
     )
-    g.add(
-        grf.If(is_static=True, variable=0, condition=0x02, value=1, skip=1, varsize=4)
-    )
-    g.add(
-        grf.DefineMultiple(
-            feature=grf.HOUSE, first_id=0, props={"substitute": [0xFF] * 0x6E}
-        )
-    )
-
-    parameter_list.add(g, s)
-    for house in houses:
-        g.add(house)
-
-    g.write("building.grf")
 
 
 def docs(args):
+    from house.lib.docgen import gen_docs, build_docs
+    from house.lib.png_houses import load_png_houses
+
+    houses = load_png_houses(Path("assets/manifest.csv"), get_string_manager())
     # Generate content (markdown files, po files, images)
     gen_docs(get_string_manager(), houses)
 

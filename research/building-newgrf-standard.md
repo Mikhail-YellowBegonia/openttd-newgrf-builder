@@ -39,6 +39,8 @@ House feature 编号为 `07`。使用一个 House ID 前，必须先通过 prope
 
 Action 1 定义一个或多个 sprite set。对 House 来说，`num-ent` 是 construction stage 的数量，规范允许 1 到 4，超过 4 的内容会被忽略。建筑最终选择哪一组精灵，不由 Action 1 单独决定。
 
+当前 NML 编译路径支持基础 1x1 和 2x2：approved zi4 PNG 由构建器派生低倍率；2x2 完整画布绑定到 north tile，其余三个 tile 使用透明精灵，并由 NML 自动生成连续 House ID、House flags 和 Action 3 绑定。
+
 ### Action 2：图形决策
 
 普通 Action 2 将 Action 1 的精灵集合编成可引用的 set ID。VarAction2 则根据变量和范围跳转到不同的 Action 2 set，可用于：
@@ -67,13 +69,17 @@ footprint: 1x1
 climate: [temperate]
 town_zones: [2, 3, 4]
 sprites:
-  normal: assets/approved/cn_town_1979_001/normal.png
-  zoom_in_2x: assets/approved/cn_town_1979_001/zi2.png
-  zoom_in_4x: assets/approved/cn_town_1979_001/zi4.png
+  master_zi4: assets/approved/cn_town_1979_001/zi4.png
+  template_spec: templates/isometric-1x1-h8/spec.json
+  mask: templates/isometric-1x1-h8/zi4.mask.png
   construction_stages: 1
 logic:
   adjacency: none
   random_variants: 4
+
+zoom_derivation:
+  zi2: nearest_2x
+  normal: nearest_4x
 ```
 
 这个 YAML 不是 NewGRF 标准格式，而是本项目的可审计中间格式。它必须能稳定生成相同的 House ID、Action 顺序和 sprite set ID。

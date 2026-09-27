@@ -1,0 +1,56 @@
+{
+  "schema": 1,
+  "work_order_id": "test1-2x2",
+  "building_id": "cn_test_rectangular_2x2_001",
+  "house_id": "129",
+  "building_family": "urban_block",
+  "density": "urban",
+  "era": "post_2000",
+  "footprint": "2x2",
+  "height_tiles": 8,
+  "source": {
+    "image": "assets/generated/test1.png",
+    "generator": {}
+  },
+  "references": {},
+  "calibration": {
+    "source_origin": [
+      553,
+      715
+    ],
+    "source_x_axis": [
+      -520,
+      -288
+    ],
+    "source_y_axis": [
+      532,
+      -301
+    ],
+    "ground_tile_size": 611.25,
+    "ground_tile_policy": "square_max",
+    "axis_scope": "footprint",
+    "projection_mode": "orthographic_affine",
+    "source_projection_angle_deg": 29.75,
+    "target_template": "templates/isometric-2x2-h8/spec.json",
+    "notes": "同一组人工标定参数，按完整 2x2 地基解释。"
+  },
+  "processing": {
+    "saturation": 1.0,
+    "background": {
+      "method": "none"
+    }
+  },
+  "deliverables": {
+    "preview": "assets/work/test1-2x2-calibration.png",
+    "approved_zi4": "assets/work/test1-2x2-zi4.png",
+    "mask": "templates/isometric-2x2-h8/zi4.mask.png",
+    "slices": "assets/work/test1-2x2-slices/slices.json"
+  },
+  "review": {
+    "rights_status": "approved",
+    "qa_status": "approved",
+    "reviewer": "user",
+    "notes": "用户确认当前 2x2 成图满意，进入打包与游戏内测试。",
+    "reviewed_at": "2026-09-27"
+  }
+}

@@ -30,8 +30,10 @@ See [the development roadmap](docs/roadmap_zh.md) and
 
 ## Repository layout
 
-- `house/`: NewGRF generator, language files, house definitions, and source art;
+- `house/`: PNG-driven NewGRF generator, language files, and house definitions;
+- `house/legacy_voxel/`: notes for the previous VOX/GoRender prototype;
 - `assets/`: provenance records and staged AI-assisted art inputs;
+- `assets/work_orders/`: machine-readable building art tasks and calibration parameters;
 - `research/`: technical research and adjacency experiments;
 - `docs/`: generated project documentation.
 
@@ -39,8 +41,9 @@ See [the development roadmap](docs/roadmap_zh.md) and
 
 ### Preparation
 
-This depends on an up-to-date version of `agrf`, which in turn depends on
-`grf-py`. Python 3.12 is the reference environment used by CI.
+The production build uses OpenTTD's NML compiler (`nmlc`). Python 3.12 is the
+reference environment used by CI; Pillow derives normal and zi2 images from
+the approved zi4 master.
 
 ```sh
 python3 -m venv .venv
@@ -48,18 +51,42 @@ python3 -m venv .venv
 python -m pip install -r requirements.txt
 ```
 
-`agrf` invokes GoRender for the existing MagicaVoxel sources. Ensure the Go
-toolchain is available in `PATH` when rendering uncached sprites.
+The old grf-py/GoRender documentation generator is retained as an optional
+legacy path; install `requirements-legacy.txt` only when working on that code.
+
+The production art path consumes approved PNG files from the asset manifest.
+The historical VOX/GoRender prototype is retained for reference only and is
+not imported by the default generator.
 
 ### Make
 
-After installing dependencies, run `make` to build the NewGRF.
+The first two commands are available during the research phase and do not
+require GoRender or any approved image yet:
 
 ```sh
-make
+make validate
+make lock
 ```
 
-The output is `building.grf`.
+After installing the Python dependencies, run `make package` to check the
+manifest, build the NewGRF, and write checksums for the result. The
+shorter `make` target remains available for the GRF-only build.
+
+```sh
+make package
+```
+
+The outputs are `building.grf`, `building.grf.sha256`, and
+`assets/manifests/manifest.lock.yaml`.
+
+For the basic 1x1 art workflow, see [the work order guide](docs/work-order_zh.md).
+The local helper supports work-order creation, calibration previews, repeatable
+processing, and registration of reviewed `zi4` PNGs into the manifest.
+
+The build generates a readable NML file at `building/building.nml` from the
+approved manifest. The current basic path supports 1x1 and 2x2 Houses; for a
+2x2 full-canvas source, the north tile carries the building image and the
+other three tiles use transparent sprites.
 
 ## Licensing and contribution
 

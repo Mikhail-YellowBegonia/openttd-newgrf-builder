@@ -1,1 +1,2 @@
-agrf @ git+https://github.com/ahyangyi/agrf@main
+NML>=0.9,<1
+Pillow>=10

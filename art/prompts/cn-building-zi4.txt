@@ -1,0 +1,13 @@
+Use case: stylized-concept
+Asset type: OpenTTD 32bpp building sprite, zi4 master
+Primary request: Generate one Chinese building in a convincing isometric game-art composition. Use the isometric style reference to establish camera angle, visible faces, composition, and rendering language. Use the architecture reference to establish the building's period, facade materials, roof form, windows, balconies, and surrounding design language. Use the optional sketch to preserve the intended massing.
+Input images: Image 1: isometric style and composition reference; Image 2: architecture and materials reference; Image 3: optional hand sketch. Do not treat any reference background, grid, scale bar, watermark, or unrelated building as part of the output.
+Scene/backdrop: a simple clean background that can be removed during manual post-processing; no city scene is required.
+Subject: one Chinese 1x1 building selected for the requested density and era.
+Style/medium: detailed 32bpp isometric game sprite, crisp material edges, readable at large zoom, restrained texture noise.
+Composition/framing: follow the isometric composition of the style reference; show the building's ground plane and visible side faces clearly. The final image will be manually scaled and fitted to a zi4 template, so prioritize a coherent building over exact pixel placement.
+Lighting/mood: fixed daylight, consistent top-left sun direction, soft contact shadow confined to the building footprint.
+Color palette: realistic Chinese urban materials, controlled saturation, no neon accents unless present in the reference.
+Materials/textures: concrete, tile, brick, glass, painted metal, weathering appropriate to the era; no readable logos or advertisements.
+Constraints: preserve the isometric orientation and architectural massing from the references; do not copy reference backgrounds, grids, scale bars, labels, or watermarks; do not invent extra buildings or vehicles; produce a clean candidate suitable for manual cutout, scaling, and zi4 fitting.
+Avoid: text, watermark, UI, grid lines, guide colors, city background, perspective camera distortion, fisheye lens, transparent checkerboard, duplicated towers, floating shadows.

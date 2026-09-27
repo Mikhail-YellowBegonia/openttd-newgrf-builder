@@ -1,0 +1,303 @@
+{
+  "schema": 1,
+  "template_id": "isometric-2x2-h8",
+  "projection": "openttd_isometric",
+  "metres_per_tile": 40,
+  "footprint": "2x2",
+  "height_tiles": 8,
+  "height_metres": 320,
+  "master_zoom": "zi4",
+  "screen_projection": {
+    "tile_edge_angle_deg": 26.565051,
+    "ground_corner_angle_deg": 126.869898,
+    "note": "These are screen-space angles for the 2:1 OpenTTD tile projection; they are not the 120-degree world-axis angle."
+  },
+  "generation_rule": "AI generates zi4 once; lower zooms are integer nearest-neighbour reductions",
+  "guide_semantics": {
+    "white": "maximum allowed drawing area; not required fill",
+    "black": "outside the allowed drawing area",
+    "red_arrow": "one ground tile edge = 40 metres"
+  },
+  "drawing_rule": "final RGBA alpha must be zero wherever the corresponding mask is zero",
+  "zooms": {
+    "normal": {
+      "scale": 1,
+      "canvas": [
+        256,
+        384
+      ],
+      "mask": "normal.mask.png",
+      "guide": "normal.guide.png",
+      "anchor": [
+        128,
+        352
+      ],
+      "tile_px": [
+        64,
+        32
+      ],
+      "tile_polygons": {
+        "0,0": [
+          [
+            128,
+            288
+          ],
+          [
+            160,
+            304
+          ],
+          [
+            128,
+            320
+          ],
+          [
+            96,
+            304
+          ]
+        ],
+        "0,1": [
+          [
+            96,
+            304
+          ],
+          [
+            128,
+            320
+          ],
+          [
+            96,
+            336
+          ],
+          [
+            64,
+            320
+          ]
+        ],
+        "1,0": [
+          [
+            160,
+            304
+          ],
+          [
+            192,
+            320
+          ],
+          [
+            160,
+            336
+          ],
+          [
+            128,
+            320
+          ]
+        ],
+        "1,1": [
+          [
+            128,
+            320
+          ],
+          [
+            160,
+            336
+          ],
+          [
+            128,
+            352
+          ],
+          [
+            96,
+            336
+          ]
+        ]
+      },
+      "derived_from": "zi4",
+      "resampling": "nearest"
+    },
+    "zi2": {
+      "scale": 2,
+      "canvas": [
+        512,
+        768
+      ],
+      "mask": "zi2.mask.png",
+      "guide": "zi2.guide.png",
+      "anchor": [
+        256,
+        704
+      ],
+      "tile_px": [
+        128,
+        64
+      ],
+      "tile_polygons": {
+        "0,0": [
+          [
+            256,
+            576
+          ],
+          [
+            320,
+            608
+          ],
+          [
+            256,
+            640
+          ],
+          [
+            192,
+            608
+          ]
+        ],
+        "0,1": [
+          [
+            192,
+            608
+          ],
+          [
+            256,
+            640
+          ],
+          [
+            192,
+            672
+          ],
+          [
+            128,
+            640
+          ]
+        ],
+        "1,0": [
+          [
+            320,
+            608
+          ],
+          [
+            384,
+            640
+          ],
+          [
+            320,
+            672
+          ],
+          [
+            256,
+            640
+          ]
+        ],
+        "1,1": [
+          [
+            256,
+            640
+          ],
+          [
+            320,
+            672
+          ],
+          [
+            256,
+            704
+          ],
+          [
+            192,
+            672
+          ]
+        ]
+      },
+      "derived_from": "zi4",
+      "resampling": "nearest"
+    },
+    "zi4": {
+      "scale": 4,
+      "canvas": [
+        1024,
+        1536
+      ],
+      "mask": "zi4.mask.png",
+      "guide": "zi4.guide.png",
+      "anchor": [
+        512,
+        1408
+      ],
+      "tile_px": [
+        256,
+        128
+      ],
+      "tile_polygons": {
+        "0,0": [
+          [
+            512,
+            1152
+          ],
+          [
+            640,
+            1216
+          ],
+          [
+            512,
+            1280
+          ],
+          [
+            384,
+            1216
+          ]
+        ],
+        "0,1": [
+          [
+            384,
+            1216
+          ],
+          [
+            512,
+            1280
+          ],
+          [
+            384,
+            1344
+          ],
+          [
+            256,
+            1280
+          ]
+        ],
+        "1,0": [
+          [
+            640,
+            1216
+          ],
+          [
+            768,
+            1280
+          ],
+          [
+            640,
+            1344
+          ],
+          [
+            512,
+            1280
+          ]
+        ],
+        "1,1": [
+          [
+            512,
+            1280
+          ],
+          [
+            640,
+            1344
+          ],
+          [
+            512,
+            1408
+          ],
+          [
+            384,
+            1344
+          ]
+        ]
+      },
+      "derived_from": null,
+      "resampling": null
+    }
+  }
+}

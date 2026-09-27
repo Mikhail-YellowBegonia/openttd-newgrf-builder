@@ -32,12 +32,14 @@ assets/
 | `asset_id` / `revision` | 必填，唯一 |
 | `building_id` / `house_id` | 与代码定义绑定 |
 | `density` / `era` / `footprint` | 内容分类 |
-| `reference_uri` / `reference_author` / `reference_license` | 实景约束来源 |
+| `style_reference_uri` / `architecture_reference_uri` / `sketch_reference_uri` | 参考图板中三类输入的来源；草图可为空 |
+| `reference_author` / `reference_license` | 参考来源的作者和许可证 |
 | `generator_type` | `ai`, `manual`, `procedural`, `hybrid` |
 | `model` / `model_version` / `prompt_hash` / `seed` | AI 生成时必填 |
 | `parent_assets` | 由哪些素材派生 |
 | `artist` / `edited_at` / `toolchain` | 人工处理记录 |
-| `sha256` / `dimensions` / `zoom_levels` | 文件完整性与图形规格 |
+| `postprocess_status` | `pending`, `cleaned`, `fitted`, `approved` |
+| `sha256` / `dimensions` / `zoom_levels` | 文件完整性与图形规格；源素材固定为 zi4，低倍率由最近邻派生 |
 | `rights_status` | `unknown`, `review`, `approved`, `rejected` |
 | `qa_status` | `pending`, `failed`, `approved` |
 | `reviewer` / `reviewed_at` / `notes` | 审核证据 |
