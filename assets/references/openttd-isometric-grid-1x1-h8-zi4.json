@@ -1,0 +1,47 @@
+{
+  "schema": 1,
+  "template": "templates/isometric-1x1-h8/spec.json",
+  "template_id": "isometric-1x1-h8",
+  "zoom": "zi4",
+  "canvas": [
+    768,
+    1408
+  ],
+  "anchor": [
+    384,
+    1280
+  ],
+  "tile_px": [
+    256,
+    128
+  ],
+  "tile_edge_px": [
+    128,
+    64
+  ],
+  "projection": "ttd",
+  "edge_angle_deg": 26.56505117707799,
+  "ground_corner_angle_deg": 126.86989764584402,
+  "subdivisions_per_tile_edge": 8,
+  "antialiasing": false,
+  "background_rgb": [
+    242,
+    244,
+    240
+  ],
+  "minor_grid_rgb": [
+    184,
+    207,
+    205
+  ],
+  "medium_grid_rgb": [
+    111,
+    157,
+    157
+  ],
+  "major_grid_rgb": [
+    45,
+    91,
+    105
+  ]
+}

@@ -8,6 +8,7 @@ changelog
 buildings
 roadmap_zh
 work-order_zh
+process-log_zh
 ```
 
 ---

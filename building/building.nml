@@ -13,13 +13,13 @@ grf {
 /* approved source: assets/work/test1-2x2-zi4.png */
 /* template: isometric-2x2-h8; anchor and canvas come from its spec */
 spriteset(test1_2x2_full, ZOOM_LEVEL_NORMAL, BIT_DEPTH_32BPP, "building/resources/nml/test1_2x2/full-normal.png") {
-    [0, 0, 256, 384, -128, -352, NOCROP]
+    [0, 0, 256, 384, -128, -288, NOCROP]
 }
 alternative_sprites(test1_2x2_full, ZOOM_LEVEL_IN_2X, BIT_DEPTH_32BPP, "building/resources/nml/test1_2x2/full-zi2.png") {
-    [0, 0, 512, 768, -256, -704, NOCROP]
+    [0, 0, 512, 768, -256, -576, NOCROP]
 }
 alternative_sprites(test1_2x2_full, ZOOM_LEVEL_IN_4X, BIT_DEPTH_32BPP, "building/resources/nml/test1_2x2/full-zi4.png") {
-    [0, 0, 1024, 1536, -512, -1408, NOCROP]
+    [0, 0, 1024, 1536, -512, -1152, NOCROP]
 }
 spriteset(test1_2x2_empty, ZOOM_LEVEL_NORMAL, BIT_DEPTH_32BPP, "building/resources/nml/shared/empty-normal.png") {
     [0, 0, 1, 1, 0, 0, NOCROP]
@@ -37,9 +37,9 @@ spritelayout test1_2x2_full_layout {
     }
     building {
         sprite: test1_2x2_full;
-        xextent: 16;
-        yextent: 16;
-        zextent: 16;
+        xextent: 32;
+        yextent: 32;
+        zextent: 64;
     }
 }
 
@@ -49,9 +49,9 @@ spritelayout test1_2x2_empty_layout {
     }
     building {
         sprite: test1_2x2_empty;
-        xextent: 16;
-        yextent: 16;
-        zextent: 16;
+        xextent: 32;
+        yextent: 32;
+        zextent: 64;
     }
 }
 

@@ -40,3 +40,25 @@ NewGRF 的几何标准。
   --projection ai120 \
   --output assets/references/ai-isometric-grid-120-2x2-h8-zi4.png
 ```
+
+## Temporal8 建筑 2801 参考
+
+已从 `Real_houses_townset_1.2.1.grf` 中提取 NFO 精灵 `2801`：
+
+- 原始 32bpp 图集：`Real_houses_townset_1.2.110.32.png` 的 `(274, 296, 256, 457)`；
+- 原始锚点：`xrel=-128, yrel=-328`；
+- 原始缩放：`zi4`，保留 `chunked nocrop`；
+- 对应 `isometric-1x1-h8` 的 1×1 地基，未做几何修正；
+- 带 TTD 网格的标准参考：`temporal8-2801-ttd-grid-zi4.png`；
+- 透明原图裁片：`temporal8-2801-sprite-zi4.png`；
+- 机器可读记录：`temporal8-2801-reference.json`。
+
+该精灵的原始地基菱形正好落在 1×1 模板的 tile 边界上，因此目前不需要人工标定。高度分档可以帮助选择输出画布和做资源打包，但不改变投影、地基或锚点规则。
+
+### 低矮建筑构图版
+
+完整标准图的画布为 `768×1408`，更适合高层建筑。针对低矮建筑另存了
+`temporal8-2801-ttd-grid-zi4-lowrise.png`：上方裁去 `512 px`，底部保留约
+`128 px` 网格缓冲，输出画布为 `768×640`。它只改变 AI 参考图的构图，不改变
+TTD 网格；裁剪偏移和恢复规则记录在同名 JSON 中。AI 重绘完成后应重新人工标记
+tile 原点，再回填到正式模板。

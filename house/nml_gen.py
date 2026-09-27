@@ -86,7 +86,14 @@ def _path_for_nml(path: Path) -> str:
     return path.as_posix()
 
 
-def _sprite_block(name: str, paths: dict[str, Path], template: dict, *, empty: bool = False) -> list[str]:
+def _sprite_block(
+    name: str,
+    paths: dict[str, Path],
+    template: dict,
+    *,
+    footprint: str,
+    empty: bool = False,
+) -> list[str]:
     lines: list[str] = []
     for index, (zoom, nml_zoom) in enumerate(
         (("normal", "ZOOM_LEVEL_NORMAL"), ("zi2", "ZOOM_LEVEL_IN_2X"), ("zi4", "ZOOM_LEVEL_IN_4X"))
@@ -94,6 +101,13 @@ def _sprite_block(name: str, paths: dict[str, Path], template: dict, *, empty: b
         spec = template["zooms"][zoom]
         width, height = spec["canvas"] if not empty else (1, 1)
         anchor_x, anchor_y = spec["anchor"] if not empty else (0, 0)
+        if footprint == "2x2" and not empty:
+            # The full-canvas source is authored against the south corner of
+            # the complete footprint. When it is attached to the north tile,
+            # the runtime House anchor needs two tile-height steps of extra
+            # downward room for a 2x2 footprint.  This compensates the one
+            # tile upward displacement seen in the in-game placement.
+            anchor_y -= 2 * spec["tile_px"][1]
         depth = "BIT_DEPTH_32BPP"
         if index == 0:
             lines.append(
@@ -120,6 +134,14 @@ def _house_block(asset: Asset, manifest_path: Path, resource_root: Path) -> list
         raise ValueError(f"{asset.asset_id}: NML path currently supports only 1x1 and 2x2")
 
     template = _load_template(manifest_path, asset)
+    width_tiles, depth_tiles = (int(part) for part in footprint.split("x", 1))
+    # Sprite-layout extents are expressed in eighths of a tile.  The old
+    # prototype used 16 for every building, which clips taller sprites at
+    # runtime.  Use the declared footprint and template height envelope so
+    # the whole approved image remains drawable in OpenTTD.
+    xextent = 16 * width_tiles
+    yextent = 16 * depth_tiles
+    zextent = 8 * int(template.get("height_tiles", 8))
     source_path = _asset_path(manifest_path, values["file_path"])
     with Image.open(source_path) as source_image:
         source = source_image.convert("RGBA")
@@ -141,9 +163,9 @@ def _house_block(asset: Asset, manifest_path: Path, resource_root: Path) -> list
         f"/* approved source: {values['file_path']} */",
         f"/* template: {values['template_id']}; anchor and canvas come from its spec */",
     ]
-    lines.extend(_sprite_block(full_name, rel_full_paths, template))
+    lines.extend(_sprite_block(full_name, rel_full_paths, template, footprint=footprint))
     if footprint == "2x2":
-        lines.extend(_sprite_block(empty_name, rel_empty_paths, template, empty=True))
+        lines.extend(_sprite_block(empty_name, rel_empty_paths, template, footprint=footprint, empty=True))
     lines.extend(
         [
             "",
@@ -153,9 +175,9 @@ def _house_block(asset: Asset, manifest_path: Path, resource_root: Path) -> list
             "    }",
             "    building {",
             f"        sprite: {full_name};",
-            "        xextent: 16;",
-            "        yextent: 16;",
-            "        zextent: 16;",
+            f"        xextent: {xextent};",
+            f"        yextent: {yextent};",
+            f"        zextent: {zextent};",
             "    }",
             "}",
         ]
@@ -170,9 +192,9 @@ def _house_block(asset: Asset, manifest_path: Path, resource_root: Path) -> list
                 "    }",
                 "    building {",
                 f"        sprite: {empty_name};",
-                "        xextent: 16;",
-                "        yextent: 16;",
-                "        zextent: 16;",
+                f"        xextent: {xextent};",
+                f"        yextent: {yextent};",
+                f"        zextent: {zextent};",
                 "    }",
                 "}",
                 "",

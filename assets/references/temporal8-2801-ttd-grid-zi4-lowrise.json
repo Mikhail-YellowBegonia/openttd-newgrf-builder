@@ -1,0 +1,36 @@
+{
+  "schema": 1,
+  "source_reference": "temporal8-2801-reference.json",
+  "variant": "lowrise-balanced",
+  "purpose": "AI reference composition for low-rise buildings; canonical anchor is intentionally not visually fixed.",
+  "source_canvas": [
+    768,
+    1408
+  ],
+  "output_canvas": [
+    768,
+    640
+  ],
+  "crop_origin_in_source_canvas": [
+    0,
+    896
+  ],
+  "top_trim_px": 512,
+  "bottom_added_buffer_px": 128,
+  "local_anchor": [
+    384,
+    384
+  ],
+  "local_sprite_top_left": [
+    256,
+    56
+  ],
+  "tile_px": [
+    256,
+    128
+  ],
+  "projection": "openttd",
+  "antialiasing": false,
+  "reversible": true,
+  "restore_rule": "Translate output coordinates by crop_origin_in_source_canvas to recover canonical coordinates; after AI redraw, manually mark the tile origin again."
+}

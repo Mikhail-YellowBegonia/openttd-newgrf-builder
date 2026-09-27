@@ -1,0 +1,41 @@
+{
+  "source_grf": "Real_houses_townset_1.2.1.grf",
+  "nfo_sprite": 2801,
+  "sheet": "Real_houses_townset_1.2.110.32.png",
+  "sheet_rect": [
+    274,
+    296,
+    256,
+    457
+  ],
+  "zoom": "zi4",
+  "bpp": 32,
+  "flags": [
+    "zi4",
+    "chunked",
+    "nocrop"
+  ],
+  "xrel": -128,
+  "yrel": -328,
+  "template": "templates/isometric-1x1-h8/spec.json",
+  "canvas": [
+    768,
+    1408
+  ],
+  "anchor": [
+    384,
+    1280
+  ],
+  "sprite_top_left": [
+    256,
+    952
+  ],
+  "tile_px": [
+    256,
+    128
+  ],
+  "projection": "openttd",
+  "antialiasing": false,
+  "note": "Sprite is positioned by its original OpenTTD anchor; no geometric correction applied.",
+  "license_status": "Custom License mentioned by source; full license text not present in unpacked directory."
+}

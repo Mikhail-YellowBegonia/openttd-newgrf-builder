@@ -9,38 +9,30 @@
   "footprint": "2x2",
   "height_tiles": 8,
   "source": {
-    "image": "assets/generated/test1-round2.png",
+    "image": "assets/generated/test1.png",
     "generator": {}
   },
   "references": {},
   "calibration": {
     "source_origin": [
-      515,
-      761
+      553,
+      715
     ],
     "source_x_axis": [
-      -511,
-      -255
+      -520,
+      -288
     ],
     "source_y_axis": [
-      508,
-      -254
+      532,
+      -301
     ],
-    "ground_tile_size": 570.9982993510662,
+    "ground_tile_size": 611.25,
     "ground_tile_policy": "square_max",
     "axis_scope": "footprint",
-    "projection_mode": "uniform",
+    "projection_mode": "orthographic_affine",
+    "source_projection_angle_deg": 29.75,
     "target_template": "templates/isometric-2x2-h8/spec.json",
-    "notes": "Round 4 calibration imported from web/calibration export; standard TTD axes; uniform 2x2 fitting.",
-    "source_angles_deg": {
-      "x": 153.43494882292202,
-      "y": 26.565051177077976,
-      "included": 126.86989764584402
-    },
-    "ttd_reference": {
-      "edge_angle_deg": 26.565051,
-      "ground_corner_angle_deg": 126.869898
-    }
+    "notes": "同一组人工标定参数，按完整 2x2 地基解释。"
   },
   "processing": {
     "saturation": 1.0,
@@ -49,16 +41,16 @@
     }
   },
   "deliverables": {
-    "preview": "assets/work/test1-2x2-round4-calibration.png",
+    "preview": "assets/work/test1-2x2-calibration.png",
     "approved_zi4": "assets/work/test1-2x2-zi4.png",
     "mask": "templates/isometric-2x2-h8/zi4.mask.png",
-    "slices": "assets/work/test1-2x2-round4-slices/slices.json"
+    "slices": "assets/work/test1-2x2-slices/slices.json"
   },
   "review": {
     "rights_status": "approved",
     "qa_status": "approved",
     "reviewer": "user",
-    "notes": "Round 4 candidate calibration; processing and GRF packaging completed, pending in-game visual check.",
+    "notes": "用户确认当前 2x2 成图满意，进入打包与游戏内测试。",
     "reviewed_at": "2026-09-27"
   }
 }

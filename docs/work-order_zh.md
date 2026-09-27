@@ -110,4 +110,8 @@ make package
 
 `process` 现在可以处理与模板匹配的 `2x2` 完整图；`slice` 会按四个 tile 的地面包络生成四张带透明区域的测试图，并写入 `slices.json`。正式 NML 编译将完整画布绑定到 north tile，其余三个 tile 使用透明精灵，并自动生成连续 House ID、House flags 和 Action 3 绑定。示例建筑有突出的大体量裙房和连桥，切片结果仍需要人工检查遮挡和切缝。
 
+完整画布的坐标锚点是整个 2×2 地基的南角，而图像实际挂接在 north tile 上。NML 编译时会按一个 tile 的高度向下调整完整图像的 sprite offset（normal/zi2/zi4 分别为 32/64/128 像素），避免成图整体向北偏移一个 tile。
+
+`slice` 生成的四张图是按地基垂直包络分配的局部图，每张单独查看时只会显示建筑的一部分；四张图叠加后才还原完整 zi4。当前生产 NML 仍将完整画布绑定到 north tile，附属 tile 使用透明精灵，因此不能把某一张 `tile-*.png` 当作完整建筑贴图。
+
 1x1 不需要准备八张方向图。NML 编译器会把一张 approved `zi4` PNG 用作基础布局，并由构建器派生 normal/zi2。2x2 可以登记一张完整画布；构建器负责 north tile 顺序、连续 House ID、多 tile flags 和其余透明 tile。

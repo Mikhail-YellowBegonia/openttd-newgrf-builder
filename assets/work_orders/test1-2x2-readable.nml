@@ -8,12 +8,13 @@
  *
  * Source art:
  *   assets/work/test1-2x2-zi4.png
- * Calibration:
- *   source origin = (553, 715)
- *   source X axis = (-520, -288)
- *   source Y axis = (532, -301)
- *   square ground tile = 611.25 source pixels
- *   projection angle = 29.75 degrees
+ * Calibration (Round 4 web export):
+ *   source origin = (515, 761)
+ *   source X axis = (-511, -255)
+ *   source Y axis = (508, -254)
+ *   square ground footprint = 570.998 source pixels
+ *   screen edge angles = 153.435 / 26.565 degrees
+ *   ground corner angle = 126.870 degrees
  *
  * The full-canvas building image is attached to the north tile. The other
  * three tiles deliberately use transparent sprites: the game then shows the
@@ -35,15 +36,17 @@ grf {
  */
 spriteset(test1_full, ZOOM_LEVEL_NORMAL, BIT_DEPTH_32BPP,
            "assets/work_orders/test1-2x2-nml/full-normal.png") {
-    [0, 0, 256, 384, -128, -352, NOCROP]
+    /* Full canvas is authored against the complete 2x2 south anchor. */
+    /* Runtime placement needs one normal tile of extra downward shift. */
+    [0, 0, 256, 384, -128, -288, NOCROP]
 }
 alternative_sprites(test1_full, ZOOM_LEVEL_IN_2X, BIT_DEPTH_32BPP,
                     "assets/work_orders/test1-2x2-nml/full-zi2.png") {
-    [0, 0, 512, 768, -256, -704, NOCROP]
+    [0, 0, 512, 768, -256, -576, NOCROP]
 }
 alternative_sprites(test1_full, ZOOM_LEVEL_IN_4X, BIT_DEPTH_32BPP,
                     "assets/work_orders/test1-2x2-nml/full-zi4.png") {
-    [0, 0, 1024, 1536, -512, -1408, NOCROP]
+    [0, 0, 1024, 1536, -512, -1152, NOCROP]
 }
 
 spriteset(test1_empty, ZOOM_LEVEL_NORMAL, BIT_DEPTH_32BPP,
@@ -65,9 +68,9 @@ spritelayout test1_full_layout {
     }
     building {
         sprite: test1_full;
-        xextent: 16;
-        yextent: 16;
-        zextent: 16;
+        xextent: 32;
+        yextent: 32;
+        zextent: 64;
     }
 }
 
@@ -77,9 +80,9 @@ spritelayout test1_empty_layout {
     }
     building {
         sprite: test1_empty;
-        xextent: 16;
-        yextent: 16;
-        zextent: 16;
+        xextent: 32;
+        yextent: 32;
+        zextent: 64;
     }
 }
 

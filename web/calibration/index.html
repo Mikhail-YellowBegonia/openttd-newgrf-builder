@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TTD 建筑标定</title>
+  <style>
+    :root { color-scheme: dark; --bg: #111417; --panel: #1a1f23; --line: #303940; --muted: #9eabb3; --text: #eef3f5; --cyan: #55d6e8; --gold: #ffca64; --green: #70e38a; --red: #ff6e68; }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; background: var(--bg); color: var(--text); font: 14px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    body { display: grid; grid-template-rows: 58px 1fr; overflow: hidden; }
+    header { display: flex; align-items: center; gap: 18px; padding: 0 20px; border-bottom: 1px solid var(--line); background: #15191c; }
+    h1 { margin: 0; font-size: 17px; font-weight: 650; letter-spacing: .02em; }
+    .subtitle { color: var(--muted); font-size: 12px; }
+    main { min-height: 0; display: grid; grid-template-columns: 310px 1fr; }
+    aside { min-height: 0; overflow: auto; padding: 18px; border-right: 1px solid var(--line); background: var(--panel); }
+    section { margin-bottom: 22px; }
+    .section-title { margin-bottom: 10px; color: #c5d0d5; font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+    .drop { display: grid; place-items: center; min-height: 76px; padding: 12px; border: 1px dashed #53616a; border-radius: 7px; color: var(--muted); text-align: center; cursor: pointer; }
+    .drop:hover, .drop.drag { border-color: var(--cyan); color: var(--text); background: #202a2e; }
+    input[type=file] { display: none; }
+    select, button { width: 100%; min-height: 36px; border: 1px solid #43515a; border-radius: 5px; background: #20282d; color: var(--text); font: inherit; }
+    select { padding: 0 9px; }
+    button { padding: 7px 10px; cursor: pointer; }
+    button:hover { border-color: #80929d; background: #29343a; }
+    button.primary { border-color: #2c9dae; background: #164b55; }
+    button.active { border-color: var(--cyan); box-shadow: 0 0 0 1px var(--cyan) inset; }
+    button:disabled { cursor: default; opacity: .42; }
+    .button-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .button-stack { display: grid; gap: 8px; }
+    .step { display: grid; grid-template-columns: 27px 1fr; gap: 9px; align-items: center; margin: 8px 0; color: var(--muted); }
+    .step b { display: grid; place-items: center; width: 24px; height: 24px; border: 1px solid #50616b; border-radius: 50%; color: #c8d4d9; font-size: 12px; }
+    .step.current { color: var(--text); }
+    .step.current b { border-color: var(--cyan); color: var(--cyan); }
+    .metric { display: grid; grid-template-columns: 1fr auto; gap: 5px 12px; padding: 10px 11px; border: 1px solid var(--line); border-radius: 6px; background: #151a1d; }
+    .metric dt { color: var(--muted); }
+    .metric dd { margin: 0; color: var(--text); font-variant-numeric: tabular-nums; text-align: right; }
+    .metric .x { color: var(--cyan); } .metric .y { color: var(--gold); } .metric .good { color: var(--green); }
+    .note { color: var(--muted); font-size: 12px; }
+    #stage { position: relative; min-width: 0; min-height: 0; overflow: hidden; background: #0b0e10; }
+    #canvas { display: block; width: 100%; height: 100%; cursor: crosshair; }
+    .stage-badge { position: absolute; top: 14px; left: 16px; padding: 5px 9px; border: 1px solid #39464d; border-radius: 4px; background: #11171acc; color: var(--muted); pointer-events: none; }
+    .zoom { position: absolute; right: 14px; bottom: 13px; padding: 5px 8px; border: 1px solid #39464d; border-radius: 4px; background: #11171acc; color: var(--muted); pointer-events: none; font-variant-numeric: tabular-nums; }
+    .legend { display: flex; gap: 13px; margin-top: 9px; color: var(--muted); font-size: 12px; }
+    .swatch { display: inline-block; width: 9px; height: 9px; margin-right: 4px; border-radius: 50%; }
+    .swatch.x { background: var(--cyan); } .swatch.y { background: var(--gold); } .swatch.o { background: var(--green); }
+    @media (max-width: 760px) { body { grid-template-rows: 52px 1fr; } main { grid-template-columns: 1fr; grid-template-rows: auto 1fr; } aside { max-height: 42vh; border-right: 0; border-bottom: 1px solid var(--line); padding: 12px 14px; } section { margin-bottom: 12px; } #stage { min-height: 58vh; } }
+  </style>
+</head>
+<body>
+  <header><h1>TTD 建筑标定</h1><span class="subtitle">固定 126.87° 地面轴 · 原始像素坐标</span></header>
+  <main>
+    <aside>
+      <section>
+        <div class="section-title">输入图像</div>
+        <label class="drop" id="dropZone" for="fileInput"><span id="fileLabel">点击选择 PNG，或拖入此处</span></label>
+        <input id="fileInput" type="file" accept="image/png,image/jpeg,image/webp">
+      </section>
+      <section>
+        <div class="section-title">工单参数</div>
+        <select id="footprint" aria-label="建筑占地"><option value="1x1">1×1 建筑</option><option value="2x2" selected>2×2 建筑</option></select>
+      </section>
+      <section>
+        <div class="section-title">标定步骤</div>
+        <div class="step current" id="stepOrigin"><b>1</b><span>点击地基南角，设置原点</span></div>
+        <div class="step" id="stepX"><b>2</b><span>点击 X 轴边界终点</span></div>
+        <div class="step" id="stepY"><b>3</b><span>点击 Y 轴边界终点</span></div>
+        <div class="button-row" style="margin-top:10px"><button id="xButton" disabled>X 轴</button><button id="yButton" disabled>Y 轴</button></div>
+      </section>
+      <section>
+        <div class="section-title">结果</div>
+        <dl class="metric">
+          <dt>原点</dt><dd id="originValue">未设置</dd>
+          <dt class="x">X 轴 Δ</dt><dd id="xValue">未设置</dd>
+          <dt class="x">X 长度 / 角度</dt><dd id="xDetail">未设置</dd>
+          <dt class="y">Y 轴 Δ</dt><dd id="yValue">未设置</dd>
+          <dt class="y">Y 长度 / 角度</dt><dd id="yDetail">未设置</dd>
+          <dt>XY 夹角</dt><dd id="angleValue">未设置</dd>
+          <dt>正方形边长</dt><dd id="sizeValue">未设置</dd>
+        </dl>
+        <div class="legend"><span><i class="swatch o"></i>原点</span><span><i class="swatch x"></i>X 轴</span><span><i class="swatch y"></i>Y 轴</span></div>
+      </section>
+      <section class="button-stack">
+        <div class="section-title">导出</div>
+        <button class="primary" id="exportJson" disabled>下载标定 JSON</button>
+        <button id="exportPng" disabled>下载标注 PNG</button>
+        <button id="reset">重置标定</button>
+      </section>
+      <p class="note">点击的 X/Y 终点会投影到标准 TTD 轴线上。JSON 同时保留鼠标原始落点和投影后的标定点。</p>
+    </aside>
+    <div id="stage"><canvas id="canvas"></canvas><div class="stage-badge" id="stageBadge">请先加载图片</div><div class="zoom" id="zoomValue">100%</div></div>
+  </main>
+  <script>
+    (() => {
+      const TAU = Math.PI * 2;
+      const AXIS_ANGLE = Math.atan(0.5);
+      const canvas = document.querySelector('#canvas');
+      const ctx = canvas.getContext('2d');
+      const stage = document.querySelector('#stage');
+      const fileInput = document.querySelector('#fileInput');
+      const dropZone = document.querySelector('#dropZone');
+      const fileLabel = document.querySelector('#fileLabel');
+      const stageBadge = document.querySelector('#stageBadge');
+      const zoomReadout = document.querySelector('#zoomValue');
+      const footprint = document.querySelector('#footprint');
+      const xButton = document.querySelector('#xButton');
+      const yButton = document.querySelector('#yButton');
+      const state = { image: null, imageName: '', pointer: null, origin: null, x: null, y: null, rawX: null, rawY: null, active: 'origin', scale: 1, offsetX: 0, offsetY: 0, dpr: 1, dragging: false, lastPointer: null };
+
+      const $ = (id) => document.getElementById(id);
+      const fmt = (n) => Number.isFinite(n) ? (Math.abs(n - Math.round(n)) < 0.005 ? String(Math.round(n)) : n.toFixed(2)) : '—';
+      const pointText = (p) => p ? `(${fmt(p.x)}, ${fmt(p.y)})` : '未设置';
+      const vector = (a, b) => ({ x: b.x - a.x, y: b.y - a.y });
+      const length = (v) => Math.hypot(v.x, v.y);
+      const angle = (v) => (Math.atan2(-v.y, v.x) * 180 / Math.PI + 360) % 360;
+      const includedAngle = (a, b) => Math.acos(Math.max(-1, Math.min(1, (a.x * b.x + a.y * b.y) / (length(a) * length(b))))) * 180 / Math.PI;
+      const screenPoint = (p) => ({ x: state.offsetX + p.x * state.scale, y: state.offsetY + p.y * state.scale });
+      const imagePoint = (x, y) => ({ x: (x - state.offsetX) / state.scale, y: (y - state.offsetY) / state.scale });
+      const eventPoint = (event) => { const r = canvas.getBoundingClientRect(); return imagePoint(event.clientX - r.left, event.clientY - r.top); };
+      const axisX = () => ({ x: -Math.cos(AXIS_ANGLE), y: -Math.sin(AXIS_ANGLE) });
+      const axisY = () => ({ x: Math.cos(AXIS_ANGLE), y: -Math.sin(AXIS_ANGLE) });
+      const snapToAxis = (p, axis) => { const dx = p.x - state.origin.x, dy = p.y - state.origin.y; const distance = dx * axis.x + dy * axis.y; return { x: state.origin.x + axis.x * distance, y: state.origin.y + axis.y * distance }; };
+
+      function resize() { const r = canvas.getBoundingClientRect(); state.dpr = window.devicePixelRatio || 1; canvas.width = Math.max(1, Math.round(r.width * state.dpr)); canvas.height = Math.max(1, Math.round(r.height * state.dpr)); draw(); }
+      function fit() { if (!state.image) return; const r = canvas.getBoundingClientRect(); const pad = 28; state.scale = Math.min((r.width - pad * 2) / state.image.width, (r.height - pad * 2) / state.image.height); state.offsetX = (r.width - state.image.width * state.scale) / 2; state.offsetY = (r.height - state.image.height * state.scale) / 2; draw(); }
+      function setImage(file) { const url = URL.createObjectURL(file); const image = new Image(); image.onload = () => { state.image = image; state.imageName = file.name; fileLabel.textContent = `${file.name} · ${image.width}×${image.height}`; stageBadge.textContent = '第 1 步：点击原点'; state.origin = state.x = state.y = state.rawX = state.rawY = null; state.active = 'origin'; fit(); update(); URL.revokeObjectURL(url); }; image.src = url; }
+
+      function drawInfiniteLine(a, direction, color, width = 1, dash = []) { const r = canvas.getBoundingClientRect(); const d = direction; const candidates = []; if (Math.abs(d.x) > 1e-9) { for (const x of [0, r.width]) { const t = (x - a.x) / d.x; const y = a.y + t * d.y; if (y >= 0 && y <= r.height) candidates.push({ x, y }); } } if (Math.abs(d.y) > 1e-9) { for (const y of [0, r.height]) { const t = (y - a.y) / d.y; const x = a.x + t * d.x; if (x >= 0 && x <= r.width) candidates.push({ x, y }); } } if (candidates.length < 2) return; ctx.save(); ctx.strokeStyle = color; ctx.lineWidth = width; ctx.setLineDash(dash); ctx.beginPath(); ctx.moveTo(candidates[0].x, candidates[0].y); ctx.lineTo(candidates[1].x, candidates[1].y); ctx.stroke(); ctx.restore(); }
+      function lineWorld(a, b, color, width = 2, dash = []) { const p = screenPoint(a), q = screenPoint(b); ctx.save(); ctx.strokeStyle = color; ctx.lineWidth = width; ctx.setLineDash(dash); ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(q.x, q.y); ctx.stroke(); ctx.restore(); }
+      function marker(p, color, radius = 5) { const q = screenPoint(p); ctx.save(); ctx.fillStyle = color; ctx.strokeStyle = '#101417'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(q.x, q.y, radius, 0, TAU); ctx.fill(); ctx.stroke(); ctx.restore(); }
+      function label(text, p, color) { const q = screenPoint(p); ctx.save(); ctx.font = '12px -apple-system, sans-serif'; ctx.fillStyle = color; ctx.strokeStyle = '#101417'; ctx.lineWidth = 4; ctx.strokeText(text, q.x + 8, q.y - 8); ctx.fillText(text, q.x + 8, q.y - 8); ctx.restore(); }
+
+      function draw() {
+        const r = canvas.getBoundingClientRect(); ctx.setTransform(state.dpr, 0, 0, state.dpr, 0, 0); ctx.clearRect(0, 0, r.width, r.height); ctx.fillStyle = '#0b0e10'; ctx.fillRect(0, 0, r.width, r.height);
+        if (state.image) { ctx.save(); ctx.translate(state.offsetX, state.offsetY); ctx.scale(state.scale, state.scale); ctx.imageSmoothingEnabled = false; ctx.drawImage(state.image, 0, 0); ctx.restore(); }
+        if (state.origin) {
+          const o = screenPoint(state.origin); drawInfiniteLine(o, axisY(), '#ffca6455', 1, [5, 5]); drawInfiniteLine(o, axisX(), '#55d6e855', 1, [5, 5]);
+          if (state.x) { lineWorld(state.origin, state.x, '#55d6e8', 2); marker(state.x, '#55d6e8'); label('X', state.x, '#55d6e8'); }
+          if (state.y) { lineWorld(state.origin, state.y, '#ffca64', 2); marker(state.y, '#ffca64'); label('Y', state.y, '#ffca64'); }
+          marker(state.origin, '#70e38a', 6); label('O', state.origin, '#70e38a');
+        }
+        if (state.pointer && state.image) { const p = screenPoint(state.pointer); drawInfiniteLine(p, axisY(), '#ffca6488', 1); drawInfiniteLine(p, axisX(), '#55d6e888', 1); ctx.save(); ctx.strokeStyle = '#eef3f5aa'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(p.x - 7, p.y); ctx.lineTo(p.x + 7, p.y); ctx.moveTo(p.x, p.y - 7); ctx.lineTo(p.x, p.y + 7); ctx.stroke(); ctx.restore(); }
+        zoomReadout.textContent = `${Math.round(state.scale * 100)}%`;
+      }
+
+      function update() {
+        $('originValue').textContent = pointText(state.origin); const xv = state.origin && state.x ? vector(state.origin, state.x) : null; const yv = state.origin && state.y ? vector(state.origin, state.y) : null;
+        $('xValue').textContent = xv ? `(${fmt(xv.x)}, ${fmt(xv.y)})` : '未设置'; $('yValue').textContent = yv ? `(${fmt(yv.x)}, ${fmt(yv.y)})` : '未设置';
+        $('xDetail').textContent = xv ? `${fmt(length(xv))} px · ${fmt(angle(xv))}°` : '未设置'; $('yDetail').textContent = yv ? `${fmt(length(yv))} px · ${fmt(angle(yv))}°` : '未设置';
+        $('angleValue').textContent = xv && yv ? `${fmt(includedAngle(xv, yv))}° · 目标 126.87°` : '未设置'; $('sizeValue').textContent = xv && yv ? `${fmt(Math.max(length(xv), length(yv)))} px` : '未设置';
+        $('stepOrigin').classList.toggle('current', state.active === 'origin'); $('stepX').classList.toggle('current', state.active === 'x'); $('stepY').classList.toggle('current', state.active === 'y');
+        xButton.disabled = !state.origin; yButton.disabled = !state.origin; xButton.classList.toggle('active', state.active === 'x'); yButton.classList.toggle('active', state.active === 'y'); $('exportJson').disabled = !(state.origin && state.x && state.y); $('exportPng').disabled = !state.image;
+        stageBadge.textContent = !state.image ? '请先加载图片' : state.active === 'origin' ? '第 1 步：点击原点' : state.active === 'x' ? '第 2 步：点击 X 轴终点' : '第 3 步：点击 Y 轴终点'; draw();
+      }
+      function reset() { state.origin = state.x = state.y = state.rawX = state.rawY = null; state.active = 'origin'; update(); }
+      function handleClick(event) { if (!state.image || state.dragging) return; const p = eventPoint(event); if (state.active === 'origin') { state.origin = p; state.active = 'x'; } else if (state.active === 'x') { state.rawX = p; state.x = snapToAxis(p, axisX()); state.active = 'y'; } else if (state.active === 'y') { state.rawY = p; state.y = snapToAxis(p, axisY()); state.active = 'x'; } update(); }
+      function download(name, blob) { const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000); }
+      function payload() { const xv = vector(state.origin, state.x), yv = vector(state.origin, state.y); return { schema: 1, source_image: state.imageName, footprint: footprint.value, projection: 'openttd_isometric', source_origin: [Math.round(state.origin.x), Math.round(state.origin.y)], source_x_axis: [Math.round(xv.x), Math.round(xv.y)], source_y_axis: [Math.round(yv.x), Math.round(yv.y)], ground_tile_size: Math.max(length(xv), length(yv)), ground_tile_policy: 'square_max', axis_scope: footprint.value === '2x2' ? 'footprint' : 'tile', projection_mode: 'uniform', source_angles_deg: { x: angle(xv), y: angle(yv), included: includedAngle(xv, yv) }, ttd_reference: { edge_angle_deg: 26.565051, ground_corner_angle_deg: 126.869898 }, raw_clicks: { origin: [state.origin.x, state.origin.y], x_endpoint: state.rawX ? [state.rawX.x, state.rawX.y] : null, y_endpoint: state.rawY ? [state.rawY.x, state.rawY.y] : null }, projected_clicks: { origin: [state.origin.x, state.origin.y], x_endpoint: [state.x.x, state.x.y], y_endpoint: [state.y.x, state.y.y] } }; }
+      function annotatedBlob() { const out = document.createElement('canvas'); out.width = state.image.width; out.height = state.image.height; const c = out.getContext('2d'); c.drawImage(state.image, 0, 0); const old = { ...state }; const sx = out.width / canvas.getBoundingClientRect().width; state.scale = sx; state.offsetX = 0; state.offsetY = 0; const save = ctx; const original = window.devicePixelRatio; state.dpr = 1; /* Draw the same overlay in image coordinates through a temporary viewport. */ const line = (a,b,color) => { c.strokeStyle=color;c.lineWidth=Math.max(2,state.image.width/600);c.beginPath();c.moveTo(a.x,a.y);c.lineTo(b.x,b.y);c.stroke(); }; if (state.origin) { if(state.x)line(state.origin,state.x,'#55d6e8'); if(state.y)line(state.origin,state.y,'#ffca64'); c.fillStyle='#70e38a';c.beginPath();c.arc(state.origin.x,state.origin.y,Math.max(4,state.image.width/100),0,TAU);c.fill(); } state.scale=old.scale;state.offsetX=old.offsetX;state.offsetY=old.offsetY;state.dpr=old.dpr; return new Promise(resolve => out.toBlob(resolve,'image/png')); }
+
+      fileInput.addEventListener('change', () => fileInput.files[0] && setImage(fileInput.files[0])); dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag'); }); dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag')); dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.classList.remove('drag'); const f = e.dataTransfer.files[0]; if (f) setImage(f); });
+      canvas.addEventListener('pointermove', e => { if (!state.image) return; state.pointer = eventPoint(e); if (state.dragging && state.lastPointer) { const r=canvas.getBoundingClientRect(); state.offsetX += e.clientX-state.lastPointer.x; state.offsetY += e.clientY-state.lastPointer.y; state.lastPointer={x:e.clientX,y:e.clientY}; } draw(); }); canvas.addEventListener('pointerleave', () => { state.pointer = null; draw(); }); canvas.addEventListener('pointerdown', e => { if (e.button === 1 || e.shiftKey) { state.dragging=true;state.lastPointer={x:e.clientX,y:e.clientY};canvas.setPointerCapture(e.pointerId); } }); canvas.addEventListener('pointerup', e => { if (state.dragging) { state.dragging=false;state.lastPointer=null;canvas.releasePointerCapture(e.pointerId); } else if (e.button === 0) handleClick(e); }); canvas.addEventListener('wheel', e => { if(!state.image)return; e.preventDefault(); const r=canvas.getBoundingClientRect(), before=imagePoint(e.clientX-r.left,e.clientY-r.top), factor=Math.exp(-e.deltaY*0.001); state.scale=Math.max(.08,Math.min(12,state.scale*factor)); const after=screenPoint(before); state.offsetX += (e.clientX-r.left)-after.x; state.offsetY += (e.clientY-r.top)-after.y; draw(); }, { passive:false });
+      xButton.addEventListener('click', () => { if(state.origin){state.active='x';update();} }); yButton.addEventListener('click', () => { if(state.origin){state.active='y';update();} }); $('reset').addEventListener('click', reset); window.addEventListener('resize', resize);
+      $('exportJson').addEventListener('click', () => { const blob=new Blob([JSON.stringify(payload(),null,2)+'\n'],{type:'application/json'}); download(`${state.imageName.replace(/\.[^.]+$/,'')}-calibration.json`,blob); }); $('exportPng').addEventListener('click', async () => { const blob=await annotatedBlob(); download(`${state.imageName.replace(/\.[^.]+$/,'')}-annotated.png`,blob); });
+      resize(); update();
+    })();
+  </script>
+</body>
+</html>

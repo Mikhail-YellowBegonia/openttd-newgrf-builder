@@ -1,6 +1,6 @@
 schema: 1
 manifest: assets/manifest.csv
-manifest_sha256: 50fe751e49b549107c1f3c6e61138ca3170fdf78d3d7d8596f906e81bd82afd3
+manifest_sha256: 1f15974f8d3b1fb6fb212c7b86fb3ed369c94984230a3af29df24c937ef75405
 entries:
   - asset_id: test1-2x2
     building_id: cn_test_rectangular_2x2_001
@@ -18,11 +18,11 @@ entries:
     anchor_y: 1408
     generator_type: ai_image
     postprocess_status: approved
-    sha256: 8fd35ead8b663071d9fe37807a25b4b8359cb0d8ae06951f8843f4d00648efdc
+    sha256: 5f8c74ba6368949a5d62a80346ef728f849907e50a950ed73457f0401ed8a467
     dimensions: 1024x1536
     zoom_levels: "zi4,zi2,normal"
     rights_status: approved
     qa_status: approved
     reviewer: user
     reviewed_at: 2026-09-27
-    notes: 用户确认当前 2x2 成图满意，进入打包与游戏内测试。
+    notes: Round 4 web calibration; standard TTD axes; uniform 2x2 fitting; ready for in-game test.
