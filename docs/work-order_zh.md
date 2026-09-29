@@ -51,6 +51,27 @@
 
 ## 本地工具
 
+### 本地 Web 工作台
+
+当前已提供一个把人工环节和确定性处理串起来的本地工作台：
+
+```sh
+python3 web/workbench/server.py
+# 浏览器打开 http://127.0.0.1:4173/workbench/
+```
+
+工作台覆盖建筑/NML 参数、参考图记录、AI 生成元数据、生成结果审核、多边形
+alpha mask、原点与 XY 轴标定、zi4 配准、2×2 切片、审核复制、manifest 登记和
+完整 GRF 构建。AI 服务调用仍由外部工具完成，工作台负责接收生成结果并保存
+provider、模型、提示词版本和 seed；不保存 API Key。
+
+工作台后端复用本文件下面的 `preview`、`process`、`slice` 和 `register` 逻辑，
+因此浏览器操作和命令行工单使用同一份 JSON 数据格式。
+
+工单现在还记录 `sprite_mode`：`single` 表示一张 zi4 在运行时复用到八个方向；
+`four_direction` 用于标记需要四方向独立素材的建筑。后者目前只进入工单规划，
+工作台会在配准/登记前明确拦截，直到 NML 方向贴图编译器接入。
+
 ```sh
 # 建立工单骨架
 .venv/bin/python -m tools.work_order init \

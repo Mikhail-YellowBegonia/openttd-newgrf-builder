@@ -83,6 +83,18 @@ For the basic 1x1 art workflow, see [the work order guide](docs/work-order_zh.md
 The local helper supports work-order creation, calibration previews, repeatable
 processing, and registration of reviewed `zi4` PNGs into the manifest.
 
+For the complete human-in-the-loop workflow, start the local web workbench:
+
+```sh
+make workbench
+# open http://127.0.0.1:4173/workbench/
+```
+
+The workbench records building/NML parameters and references, accepts external
+AI generation results, provides polygon masking and XY calibration, runs the
+deterministic `zi4`/slice pipeline, and exposes review, manifest registration,
+and full GRF build actions. AI service credentials are not stored by the app.
+
 The build generates a readable NML file at `building/building.nml` from the
 approved manifest. The current basic path supports 1x1 and 2x2 Houses; for a
 2x2 full-canvas source, the north tile carries the building image and the

@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TTD 建筑制作工作台</title>
+  <link rel="stylesheet" href="/workbench/style.css">
+</head>
+<body>
+  <header>
+    <div><h1>TTD 建筑制作工作台</h1><div class="subtitle">人工把关 · 程序配准 · 工单驱动 · NML 构建</div></div>
+    <div class="toolbar">
+      <button id="newOrder">新建工单</button>
+      <select id="orderSelect" aria-label="选择已保存工单"><option value="">选择工单…</option></select>
+      <button id="loadOrder">读取已保存工单</button>
+      <button class="primary" id="saveOrder">保存工单</button>
+    </div>
+  </header>
+  <main>
+    <aside>
+      <section class="section">
+        <div class="section-title">流程</div>
+        <div class="stage-nav" id="stageNav">
+          <button data-stage="brief" class="active"><b>1</b><span>参数与参考图</span></button>
+          <button data-stage="generate"><b>2</b><span>生成与审核</span></button>
+          <button data-stage="mask"><b>3</b><span>人工扣图</span></button>
+          <button data-stage="calibrate"><b>4</b><span>XY 投影标定</span></button>
+          <button data-stage="process"><b>5</b><span>自动配准与切片</span></button>
+          <button data-stage="catalog"><b>6</b><span>素材库与构建</span></button>
+        </div>
+      </section>
+      <section class="section">
+        <div class="section-title">当前状态</div>
+        <div class="status" id="status">准备创建工单</div>
+      </section>
+      <section class="section">
+        <div class="section-title">确定性工具</div>
+        <div class="actions">
+          <button id="runPreview">生成标定预览</button>
+          <button id="runProcess">执行配准，生成 zi4</button>
+          <button id="runSlice">生成占地切片</button>
+          <button class="good" id="runRegister">登记到素材库</button>
+          <button class="warn" id="runBuild">构建整个 GRF</button>
+        </div>
+      </section>
+    </aside>
+
+    <section class="stage">
+      <div class="stage-header"><h2 id="stageTitle">参数与参考图</h2><span id="stageDescription">先建立建筑身份、NML 参数和参考图记录。</span></div>
+      <div class="stage-body">
+        <section class="panel stage-panel" data-panel="brief">
+          <div class="section-title">建筑与 NML 参数</div>
+          <div class="grid2">
+            <div class="field"><label>工单 ID</label><input id="work_order_id" placeholder="cn_town_001"></div>
+            <div class="field"><label>建筑 ID</label><input id="building_id" placeholder="cn_town_2000_001"></div>
+            <div class="field"><label>House ID</label><input id="house_id" value="128"></div>
+            <div class="field"><label>建筑族</label><input id="building_family" placeholder="town_lowrise"></div>
+            <div class="field"><label>密度</label><select id="density"><option>rural</option><option selected>town</option><option>urban</option><option>highrise</option></select></div>
+            <div class="field"><label>年代</label><select id="era"><option>pre_1949</option><option>1949_1978</option><option>1979_2000</option><option selected>post_2000</option></select></div>
+            <div class="field"><label>占地</label><select id="footprint"><option selected>1x1</option><option>2x2</option></select></div>
+            <div class="field"><label>高度（tile）</label><input id="height_tiles" type="number" min="1" value="8"></div>
+            <div class="field"><label>方向素材</label><select id="sprite_mode"><option value="single" selected>单图，运行时复用 8 方向</option><option value="four_direction">四方向素材（待接入编译器）</option></select></div>
+          </div>
+          <div class="grid2">
+            <div class="field"><label>模板</label><select id="target_template"><option value="templates/isometric-1x1-h8/spec.json">isometric-1x1-h8</option><option value="templates/isometric-2x2-h8/spec.json">isometric-2x2-h8</option></select></div>
+            <div class="field"><label>背景处理</label><select id="background_method"><option value="mask_file" selected>人工 mask</option><option value="flood_fill">flood fill（仅初筛）</option><option value="none">不处理</option></select></div>
+          </div>
+          <div class="section-title">参考图</div>
+          <div class="grid2">
+            <div class="field"><label>风格参考 URI / 备注</label><input id="reference_style" placeholder="assets/references/..."></div>
+            <div class="field"><label>建筑参考 URI / 备注</label><input id="reference_architecture" placeholder="照片、立面、屋顶资料"></div>
+          </div>
+          <div class="field"><label>草图参考 URI / 备注</label><input id="reference_sketch" placeholder="可选"></div>
+          <p class="hint">方向素材会写入工单。当前 NML 生成器仍使用一张 approved zi4 并复用到 8 个方向；四方向素材的独立贴图编译尚未接入。</p>
+          <div class="section-title">输入图像</div>
+          <label class="drop" id="sourceDrop" for="sourceInput"><span id="sourceLabel">选择 AI 生成图（PNG/JPEG/WebP）</span></label>
+          <input id="sourceInput" type="file" accept="image/png,image/jpeg,image/webp">
+        </section>
+
+        <section class="panel stage-panel hidden" data-panel="generate">
+          <div class="section-title">生成任务</div>
+          <div class="field"><label>Provider</label><input id="provider" value="openai" placeholder="openai / gemini / other"></div>
+          <div class="grid2"><div class="field"><label>模型</label><input id="model" placeholder="gpt-image-1"></div><div class="field"><label>模型版本</label><input id="model_version"></div></div>
+          <div class="grid2"><div class="field"><label>提示词版本</label><input id="prompt_version" value="v1"></div><div class="field"><label>Seed</label><input id="seed"></div></div>
+          <div class="field"><label>提示词</label><textarea id="prompt" placeholder="描述建筑体块、立面、屋顶、材料、视角和光照；不要要求模型绘制网格或标尺。"></textarea></div>
+          <div class="row"><button class="primary" id="copyPrompt">复制提示词</button><button id="markGenerated">标记为已生成，进入审核</button></div>
+          <p class="hint">工作台不保存 API Key。生成服务可以在外部调用，生成结果回到这里上传；工单会记录 provider、模型、提示词版本和 seed。</p>
+          <div class="section-title">审核</div>
+          <div class="checklist">
+            <label class="check"><input type="checkbox" id="reviewShape"> 体块、屋顶和立面质量可接受</label>
+            <label class="check"><input type="checkbox" id="reviewProjection"> 没有明显投影或方向错误</label>
+            <label class="check"><input type="checkbox" id="reviewRights"> 参考图来源和授权状态已记录</label>
+          </div>
+          <div class="field"><label>审核备注</label><textarea id="review_notes"></textarea></div>
+        </section>
+
+        <section class="panel stage-panel hidden" data-panel="mask">
+          <div class="section-title">人工多边形扣图</div>
+          <p class="hint">点击建筑轮廓建立多边形；双击或点击“闭合多边形”完成。白色区域会作为 alpha mask，程序随后仍会叠加模板 mask。</p>
+          <div class="canvas-toolbar"><button id="maskUndo">撤销一点</button><button id="maskClose" class="primary">闭合多边形</button><button id="maskClear">清空</button></div>
+          <div class="canvas-wrap"><canvas id="maskCanvas"></canvas></div>
+        </section>
+
+        <section class="panel stage-panel hidden" data-panel="calibrate">
+          <div class="section-title">人工标定原点和 XY 地面轴</div>
+          <p class="hint">依次点击地基南角、X 轴边界、Y 轴边界。X/Y 终点会吸附到 OpenTTD 2:1 地面轴。这里不替代人工判断，只把结果写入工单。</p>
+          <div class="canvas-toolbar"><button id="calReset">重置标定</button><button id="calOrigin">原点</button><button id="calX">X 轴</button><button id="calY">Y 轴</button></div>
+          <div class="canvas-wrap"><canvas id="calCanvas"></canvas></div>
+          <dl class="metrics"><dt class="o">原点</dt><dd id="metricOrigin">未设置</dd><dt class="x">X 轴</dt><dd id="metricX">未设置</dd><dt class="y">Y 轴</dt><dd id="metricY">未设置</dd><dt>夹角</dt><dd id="metricAngle">未设置</dd><dt>地基边长</dt><dd id="metricSize">未设置</dd></dl>
+        </section>
+
+        <section class="panel stage-panel hidden" data-panel="process">
+          <div class="section-title">自动配准与切片</div>
+          <div class="row"><button class="primary" id="processHere">执行配准</button><button id="sliceHere">生成切片</button></div>
+          <div class="preview" id="processPreview"><span class="hint">尚未生成 zi4</span></div>
+          <p class="hint mono" id="deliverables">输出会写入 assets/work/ 和 assets/approved/。</p>
+        </section>
+
+        <section class="panel stage-panel hidden" data-panel="catalog">
+          <div class="section-title">素材库与构建</div>
+          <p class="hint">只有 rights_status 和 qa_status 都为 approved 的工单，才会复制到 approved 并登记 manifest。</p>
+          <div class="grid2"><div class="field"><label>权利状态</label><select id="rights_status"><option selected>review</option><option>approved</option><option>rejected</option></select></div><div class="field"><label>QA 状态</label><select id="qa_status"><option selected>pending</option><option>approved</option><option>rejected</option></select></div></div>
+          <div class="field"><label>审核人</label><input id="reviewer" value="user"></div>
+          <div class="field"><label>登记备注</label><textarea id="catalog_notes"></textarea></div>
+          <div class="row"><button class="good" id="approveHere">批准并复制到 approved</button><button id="registerHere">登记 manifest</button><button class="warn" id="buildHere">构建 GRF</button></div>
+          <div class="status" id="buildOutput">构建输出会显示在这里。</div>
+        </section>
+      </div>
+    </section>
+
+    <aside class="right">
+      <section class="section"><div class="section-title">生成结果</div><div class="preview" id="sourcePreview"><span class="hint">尚未上传图像</span></div></section>
+      <section class="section"><div class="section-title">工单 JSON 摘要</div><pre class="panel mono small" id="orderSummary">{}</pre></section>
+      <section class="section"><div class="section-title">已登记素材</div><div id="manifestList" class="small hint">读取中…</div></section>
+    </aside>
+  </main>
+  <script src="/workbench/app.js"></script>
+</body>
+</html>

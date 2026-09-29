@@ -19,6 +19,9 @@ template:
 work-order:
 	$(PYTHON) -m tools.work_order --help
 
+workbench:
+	$(PYTHON) web/workbench/server.py
+
 building: clean_building building.grf
 
 clean_building:
