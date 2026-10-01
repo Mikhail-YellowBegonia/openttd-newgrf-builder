@@ -1,0 +1,69 @@
+{
+  "schema": 1,
+  "work_order_id": "cn_workbench_test_01",
+  "building_id": "cn_2000_kindergarten_01",
+  "house_id": "137",
+  "building_family": "urban_block",
+  "density": "town",
+  "era": "post_2000",
+  "footprint": "1x1",
+  "height_tiles": 8,
+  "source": {
+    "image": "assets/generated/cn_workbench_test_01.png",
+    "generator": {
+      "provider": "",
+      "model": "",
+      "model_version": "",
+      "prompt_version": "",
+      "seed": "",
+      "prompt": ""
+    }
+  },
+  "references": {
+    "style": "",
+    "architecture": "",
+    "sketch": ""
+  },
+  "calibration": {
+    "source_origin": [
+      1181,
+      1695
+    ],
+    "source_x_axis": [
+      -982,
+      -491
+    ],
+    "source_y_axis": [
+      948,
+      -474
+    ],
+    "ground_tile_size": 1098.1243381910745,
+    "ground_tile_policy": "square_max",
+    "axis_scope": "tile",
+    "projection_mode": "uniform",
+    "target_template": "templates/isometric-1x1-h8/spec.json",
+    "notes": "Created in the TTD building workbench."
+  },
+  "processing": {
+    "saturation": 1,
+    "background": {
+      "method": "mask_file",
+      "mask_file": "assets/work/cn_workbench_test_01-mask.png"
+    }
+  },
+  "sprite_mode": "single",
+  "deliverables": {
+    "preview": "assets/work/cn_workbench_test_01-calibration.png",
+    "approved_zi4": "assets/approved/cn_workbench_test_01-zi4.png",
+    "mask": "templates/isometric-1x1-h8/zi4.mask.png",
+    "processed_zi4": "assets/work/cn_workbench_test_01-zi4.png",
+    "slices": "assets/work/cn_workbench_test_01-slices/slices.json"
+  },
+  "review": {
+    "rights_status": "approved",
+    "qa_status": "approved",
+    "reviewer": "user",
+    "reviewed_at": "2026-10-01",
+    "notes": "人工试用工作台的测试案例，目标为1*1"
+  }
+}

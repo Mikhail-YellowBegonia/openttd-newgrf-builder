@@ -1,0 +1,129 @@
+{
+  "schema": 1,
+  "source": "/Users/Administrator/Desktop/kos/ttd/assets/work/workbench-trial-2x2-zi4.png",
+  "template_id": "isometric-2x2-h8",
+  "footprint": "2x2",
+  "tiles": [
+    {
+      "tile": [
+        0,
+        0
+      ],
+      "key": "0,0",
+      "file": "tile-0-0.png",
+      "canvas": [
+        1024,
+        1536
+      ],
+      "ground_polygon": [
+        [
+          512,
+          1152
+        ],
+        [
+          640,
+          1216
+        ],
+        [
+          512,
+          1280
+        ],
+        [
+          384,
+          1216
+        ]
+      ]
+    },
+    {
+      "tile": [
+        1,
+        0
+      ],
+      "key": "1,0",
+      "file": "tile-1-0.png",
+      "canvas": [
+        1024,
+        1536
+      ],
+      "ground_polygon": [
+        [
+          640,
+          1216
+        ],
+        [
+          768,
+          1280
+        ],
+        [
+          640,
+          1344
+        ],
+        [
+          512,
+          1280
+        ]
+      ]
+    },
+    {
+      "tile": [
+        0,
+        1
+      ],
+      "key": "0,1",
+      "file": "tile-0-1.png",
+      "canvas": [
+        1024,
+        1536
+      ],
+      "ground_polygon": [
+        [
+          384,
+          1216
+        ],
+        [
+          512,
+          1280
+        ],
+        [
+          384,
+          1344
+        ],
+        [
+          256,
+          1280
+        ]
+      ]
+    },
+    {
+      "tile": [
+        1,
+        1
+      ],
+      "key": "1,1",
+      "file": "tile-1-1.png",
+      "canvas": [
+        1024,
+        1536
+      ],
+      "ground_polygon": [
+        [
+          512,
+          1280
+        ],
+        [
+          640,
+          1344
+        ],
+        [
+          512,
+          1408
+        ],
+        [
+          384,
+          1344
+        ]
+      ]
+    }
+  ],
+  "status": "art-split-only; House compiler integration pending"
+}

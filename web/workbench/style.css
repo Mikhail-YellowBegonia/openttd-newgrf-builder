@@ -40,6 +40,10 @@ aside { border-right: 1px solid var(--line); }
 .field label { color: var(--muted); font-size: 12px; }
 .drop { display: grid; place-items: center; min-height: 84px; padding: 10px; border: 1px dashed #586972; border-radius: 7px; color: var(--muted); text-align: center; cursor: pointer; }
 .drop.drag { border-color: var(--cyan); color: var(--text); background: #202c31; }
+.reference-picker { display: grid; gap: 7px; margin-bottom: 10px; padding: 10px; border: 1px solid var(--line); border-radius: 6px; background: #11171a; }
+.reference-picker .field { margin-bottom: 0; }
+.reference-preview { display: grid; place-items: center; min-height: 150px; max-height: 240px; overflow: hidden; border: 1px solid var(--line); border-radius: 5px; background: #080b0d; }
+.reference-preview img { max-width: 100%; max-height: 230px; image-rendering: auto; }
 input[type=file] { display: none; }
 .stage-nav { display: grid; gap: 7px; }
 .stage-nav button { display: grid; grid-template-columns: 28px 1fr; gap: 9px; align-items: center; text-align: left; }
@@ -74,6 +78,12 @@ canvas { display: block; max-width: 100%; max-height: 70vh; }
 .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 .row > * { flex: 1 1 auto; }
 .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+.catalog-count { display: block; margin-bottom: 7px; }
+.catalog-item { display: grid; gap: 2px; margin-bottom: 8px; padding: 9px; border: 1px solid var(--line); border-radius: 6px; background: #13191c; }
+.catalog-heading { display: flex; justify-content: space-between; gap: 8px; }
+.catalog-heading span { color: var(--cyan); }
+.catalog-path { overflow-wrap: anywhere; }
+.catalog-status { margin-top: 4px; color: var(--green); font-size: 11px; }
 .hidden { display: none !important; }
 @media (max-width: 1100px) { main { grid-template-columns: 250px minmax(440px, 1fr); } .right { grid-column: 1 / -1; max-height: 360px; border-top: 1px solid var(--line); border-left: 0; } }
 @media (max-width: 760px) { header { flex-wrap: wrap; } .toolbar { width: 100%; margin-left: 0; } main { display: block; } aside, .right { max-height: none; border: 0; border-bottom: 1px solid var(--line); } .stage { min-height: 640px; } }

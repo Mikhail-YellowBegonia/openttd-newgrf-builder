@@ -76,3 +76,112 @@ item(FEAT_HOUSES, test1_2x2_house, 129, HOUSE_SIZE_2X2) {
         default: test1_2x2_layout;
     }
 }
+
+/* workbench-trial-2x2: cn_workbench_trial_2x2, 2x2, House ID 133 */
+/* approved source: assets/approved/workbench-trial-2x2-zi4.png */
+/* template: isometric-2x2-h8; anchor and canvas come from its spec */
+spriteset(workbench_trial_2x2_full, ZOOM_LEVEL_NORMAL, BIT_DEPTH_32BPP, "building/resources/nml/workbench_trial_2x2/full-normal.png") {
+    [0, 0, 256, 384, -128, -288, NOCROP]
+}
+alternative_sprites(workbench_trial_2x2_full, ZOOM_LEVEL_IN_2X, BIT_DEPTH_32BPP, "building/resources/nml/workbench_trial_2x2/full-zi2.png") {
+    [0, 0, 512, 768, -256, -576, NOCROP]
+}
+alternative_sprites(workbench_trial_2x2_full, ZOOM_LEVEL_IN_4X, BIT_DEPTH_32BPP, "building/resources/nml/workbench_trial_2x2/full-zi4.png") {
+    [0, 0, 1024, 1536, -512, -1152, NOCROP]
+}
+spriteset(workbench_trial_2x2_empty, ZOOM_LEVEL_NORMAL, BIT_DEPTH_32BPP, "building/resources/nml/shared/empty-normal.png") {
+    [0, 0, 1, 1, 0, 0, NOCROP]
+}
+alternative_sprites(workbench_trial_2x2_empty, ZOOM_LEVEL_IN_2X, BIT_DEPTH_32BPP, "building/resources/nml/shared/empty-zi2.png") {
+    [0, 0, 1, 1, 0, 0, NOCROP]
+}
+alternative_sprites(workbench_trial_2x2_empty, ZOOM_LEVEL_IN_4X, BIT_DEPTH_32BPP, "building/resources/nml/shared/empty-zi4.png") {
+    [0, 0, 1, 1, 0, 0, NOCROP]
+}
+
+spritelayout workbench_trial_2x2_full_layout {
+    ground {
+        sprite: GROUNDSPRITE_NORMAL;
+    }
+    building {
+        sprite: workbench_trial_2x2_full;
+        xextent: 32;
+        yextent: 32;
+        zextent: 64;
+    }
+}
+
+spritelayout workbench_trial_2x2_empty_layout {
+    ground {
+        sprite: GROUNDSPRITE_NORMAL;
+    }
+    building {
+        sprite: workbench_trial_2x2_empty;
+        xextent: 32;
+        yextent: 32;
+        zextent: 64;
+    }
+}
+
+switch(FEAT_HOUSES, SELF, workbench_trial_2x2_layout, house_tile) {
+    HOUSE_TILE_NORTH: workbench_trial_2x2_full_layout;
+    workbench_trial_2x2_empty_layout;
+}
+
+item(FEAT_HOUSES, workbench_trial_2x2_house, 133, HOUSE_SIZE_2X2) {
+    property {
+        substitute: 20;
+        name: string(STR_HOUSE_TOWN);
+        /* NML probability 1 emits raw Action 0 probability 16. */
+        probability: 1;
+        population: 1;
+        availability_mask: [ALL_TOWNZONES, bitmask(CLIMATE_TEMPERATE, CLIMATE_ARCTIC, CLIMATE_TROPIC, CLIMATE_TOYLAND, ABOVE_SNOWLINE)];
+        /* NML emits 0x30, 0x20, 0x20, 0x20 for the four tiles. */
+        building_flags: 0x20;
+    }
+
+    graphics {
+        default: workbench_trial_2x2_layout;
+    }
+}
+
+/* cn_workbench_test_01: cn_2000_kindergarten_01, 1x1, House ID 137 */
+/* approved source: assets/approved/cn_workbench_test_01-zi4.png */
+/* template: isometric-1x1-h8; anchor and canvas come from its spec */
+spriteset(cn_workbench_test_01_full, ZOOM_LEVEL_NORMAL, BIT_DEPTH_32BPP, "building/resources/nml/cn_workbench_test_01/full-normal.png") {
+    [0, 0, 192, 352, -96, -288, NOCROP]
+}
+alternative_sprites(cn_workbench_test_01_full, ZOOM_LEVEL_IN_2X, BIT_DEPTH_32BPP, "building/resources/nml/cn_workbench_test_01/full-zi2.png") {
+    [0, 0, 384, 704, -192, -576, NOCROP]
+}
+alternative_sprites(cn_workbench_test_01_full, ZOOM_LEVEL_IN_4X, BIT_DEPTH_32BPP, "building/resources/nml/cn_workbench_test_01/full-zi4.png") {
+    [0, 0, 768, 1408, -384, -1152, NOCROP]
+}
+
+spritelayout cn_workbench_test_01_full_layout {
+    ground {
+        sprite: GROUNDSPRITE_NORMAL;
+    }
+    building {
+        sprite: cn_workbench_test_01_full;
+        xextent: 16;
+        yextent: 16;
+        zextent: 64;
+    }
+}
+
+item(FEAT_HOUSES, cn_workbench_test_01_house, 137, HOUSE_SIZE_1X1) {
+    property {
+        substitute: 6;
+        name: string(STR_HOUSE_TOWN);
+        /* NML probability 1 emits raw Action 0 probability 16. */
+        probability: 1;
+        population: 1;
+        availability_mask: [ALL_TOWNZONES, bitmask(CLIMATE_TEMPERATE, CLIMATE_ARCTIC, CLIMATE_TROPIC, CLIMATE_TOYLAND, ABOVE_SNOWLINE)];
+        building_flags: bitmask(HOUSE_FLAG_NOT_SLOPED);
+    }
+
+    graphics {
+        default: cn_workbench_test_01_full_layout;
+    }
+}

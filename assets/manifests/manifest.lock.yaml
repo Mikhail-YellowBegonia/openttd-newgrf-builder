@@ -1,6 +1,6 @@
 schema: 1
 manifest: assets/manifest.csv
-manifest_sha256: 1f15974f8d3b1fb6fb212c7b86fb3ed369c94984230a3af29df24c937ef75405
+manifest_sha256: ef979415cfdfeedaec94b5c74ac7aa22524a8114c03d17b1d2a61c31e41291db
 entries:
   - asset_id: test1-2x2
     building_id: cn_test_rectangular_2x2_001
@@ -26,3 +26,56 @@ entries:
     reviewer: user
     reviewed_at: 2026-09-27
     notes: Round 4 web calibration; standard TTD axes; uniform 2x2 fitting; ready for in-game test.
+  - asset_id: workbench-trial-2x2
+    building_id: cn_workbench_trial_2x2
+    house_id: 133
+    building_family: urban_block
+    density: urban
+    era: post_2000
+    footprint: 2x2
+    template_id: isometric-2x2-h8
+    template_spec: templates/isometric-2x2-h8/spec.json
+    zoom_level: zi4
+    file_path: assets/approved/workbench-trial-2x2-zi4.png
+    mask_path: templates/isometric-2x2-h8/zi4.mask.png
+    anchor_x: 512
+    anchor_y: 1408
+    style_reference_uri: assets/references/temporal8-2801-ttd-grid-zi4.png
+    architecture_reference_uri: assets/generated/test1-round2.png
+    generator_type: ai_image
+    model: existing-approved-source
+    model_version: repo-fixture
+    prompt_version: v1
+    postprocess_status: approved
+    sha256: 3b1b55131bbe0c023a3655caf08041bd24e383736e7f71ec7d816dd0fe9a0111
+    dimensions: 1024x1536
+    zoom_levels: "zi4,zi2,normal"
+    rights_status: approved
+    qa_status: approved
+    reviewer: user
+    reviewed_at: 2026-09-29
+    notes: 人工试用：mask、XY 标定、配准、切片和 GRF 构建闭环验证。
+  - asset_id: cn_workbench_test_01
+    building_id: cn_2000_kindergarten_01
+    house_id: 137
+    building_family: urban_block
+    density: town
+    era: post_2000
+    footprint: 1x1
+    template_id: isometric-1x1-h8
+    template_spec: templates/isometric-1x1-h8/spec.json
+    zoom_level: zi4
+    file_path: assets/approved/cn_workbench_test_01-zi4.png
+    mask_path: templates/isometric-1x1-h8/zi4.mask.png
+    anchor_x: 384
+    anchor_y: 1280
+    generator_type: ai_image
+    postprocess_status: approved
+    sha256: 66ac48f3d1e3ee41390415615d46d30ebf2e07f0a485bfe9420d549b2af626f1
+    dimensions: 768x1408
+    zoom_levels: "zi4,zi2,normal"
+    rights_status: approved
+    qa_status: approved
+    reviewer: user
+    reviewed_at: 2026-10-01
+    notes: "人工试用工作台的测试案例，目标为1*1"

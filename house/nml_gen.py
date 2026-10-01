@@ -86,12 +86,34 @@ def _path_for_nml(path: Path) -> str:
     return path.as_posix()
 
 
+def _sprite_offset(spec: dict, attachment_point: tuple[int, int]) -> tuple[int, int]:
+    """Place a template point on the runtime tile's drawing origin.
+
+    The art workflow calibrates against the full footprint's south anchor,
+    while a House draws its full sprite from the north tile.  Both points are
+    in the same template coordinate system.  Passing the actual attachment
+    point here handles both X and Y for rectangular footprints.  A different
+    feature, such as an object, can supply its own attachment point.
+    """
+
+    anchor_x, anchor_y = (int(value) for value in spec["anchor"])
+    point_x, point_y = attachment_point
+    shift_x, shift_y = anchor_x - point_x, anchor_y - point_y
+    return -anchor_x + shift_x, -anchor_y + shift_y
+
+
+def _house_attachment_point(spec: dict) -> tuple[int, int]:
+    """The north ground corner of the House tile that owns the full sprite."""
+
+    point = spec["tile_polygons"]["0,0"][0]
+    return int(point[0]), int(point[1])
+
+
 def _sprite_block(
     name: str,
     paths: dict[str, Path],
     template: dict,
     *,
-    footprint: str,
     empty: bool = False,
 ) -> list[str]:
     lines: list[str] = []
@@ -100,14 +122,7 @@ def _sprite_block(
     ):
         spec = template["zooms"][zoom]
         width, height = spec["canvas"] if not empty else (1, 1)
-        anchor_x, anchor_y = spec["anchor"] if not empty else (0, 0)
-        if footprint == "2x2" and not empty:
-            # The full-canvas source is authored against the south corner of
-            # the complete footprint. When it is attached to the north tile,
-            # the runtime House anchor needs two tile-height steps of extra
-            # downward room for a 2x2 footprint.  This compensates the one
-            # tile upward displacement seen in the in-game placement.
-            anchor_y -= 2 * spec["tile_px"][1]
+        xrel, yrel = _sprite_offset(spec, _house_attachment_point(spec)) if not empty else (0, 0)
         depth = "BIT_DEPTH_32BPP"
         if index == 0:
             lines.append(
@@ -119,7 +134,7 @@ def _sprite_block(
                 f"{_nml_string(_path_for_nml(paths[zoom]))}) {{"
             )
         lines.append(
-            f"    [0, 0, {width}, {height}, {-anchor_x}, {-anchor_y}, NOCROP]"
+            f"    [0, 0, {width}, {height}, {xrel}, {yrel}, NOCROP]"
         )
         lines.append("}")
     return lines
@@ -163,9 +178,9 @@ def _house_block(asset: Asset, manifest_path: Path, resource_root: Path) -> list
         f"/* approved source: {values['file_path']} */",
         f"/* template: {values['template_id']}; anchor and canvas come from its spec */",
     ]
-    lines.extend(_sprite_block(full_name, rel_full_paths, template, footprint=footprint))
+    lines.extend(_sprite_block(full_name, rel_full_paths, template))
     if footprint == "2x2":
-        lines.extend(_sprite_block(empty_name, rel_empty_paths, template, footprint=footprint, empty=True))
+        lines.extend(_sprite_block(empty_name, rel_empty_paths, template, empty=True))
     lines.extend(
         [
             "",

@@ -31,6 +31,7 @@ GENERATED = ROOT / "assets" / "generated"
 WORK = ROOT / "assets" / "work"
 APPROVED = ROOT / "assets" / "approved"
 MANIFEST = ROOT / "assets" / "manifest.csv"
+REFERENCES = ROOT / "assets" / "references"
 
 for directory in (WORK_ORDERS, GENERATED, WORK, APPROVED):
     directory.mkdir(parents=True, exist_ok=True)
@@ -105,6 +106,25 @@ def manifest_rows() -> list[dict]:
         return list(csv.DictReader(handle))
 
 
+def reference_assets() -> list[dict]:
+    """Return checked-in image references available to the workbench."""
+    assets = []
+    for path in sorted(REFERENCES.glob("*.png")):
+        if "grid" not in path.stem:
+            continue
+        name = path.stem
+        labels = {
+            "temporal8-2801-ttd-grid-zi4": ("Temporal8 · 1x1 · 一般", "ai_reference"),
+            "temporal8-2801-ttd-grid-zi4-lowrise": ("Temporal8 · 1x1 · 低层变体", "ai_reference"),
+            "openttd-isometric-grid-1x1-h8-zi4": ("OpenTTD 空网格 · 1x1", "template_grid"),
+            "openttd-isometric-grid-2x2-h8-zi4": ("OpenTTD 空网格 · 2x2", "template_grid"),
+            "ai-isometric-grid-120-2x2-h8-zi4": ("AI 120° 网格 · 2x2", "template_grid"),
+        }
+        label, role = labels.get(name, (name, "reference"))
+        assets.append({"id": name, "label": label, "path": relative_path(path), "role": role})
+    return assets
+
+
 def save_order(payload: dict) -> dict:
     order = dict(payload.get("order") or {})
     work_order_id = safe_id(order.get("work_order_id"))
@@ -148,26 +168,34 @@ def run_action(order_id: str, action: str) -> dict:
     if action in {"process", "register"} and order.get("sprite_mode") == "four_direction":
         raise ValueError("four_direction is recorded in the work order, but directional sprite compilation is not connected yet")
     output = None
+    deliverables = dict(order.get("deliverables") or {})
     if action == "preview":
         output = WORK / f"{order_id}-calibration.png"
         preview(path, output)
+        deliverables["preview"] = relative_path(output)
     elif action == "process":
         output = WORK / f"{order_id}-zi4.png"
         process(path, output)
+        deliverables["processed_zi4"] = relative_path(output)
     elif action == "slice":
         source = WORK / f"{order_id}-zi4.png"
         if not source.is_file():
             raise ValueError("process the work order before slicing")
         output = WORK / f"{order_id}-slices"
         slice_sprite(path, source, output)
+        deliverables["slices"] = relative_path(output / "slices.json")
     elif action == "register":
         source = APPROVED / f"{order_id}-zi4.png"
         if not source.is_file():
             raise ValueError("approve the processed image before registering")
         register(path, MANIFEST, source)
+        order = read_json(path)
+        deliverables = dict(order.get("deliverables") or {})
         output = MANIFEST
     else:
         raise ValueError(f"unsupported action: {action}")
+    order["deliverables"] = deliverables
+    write_json(path, order)
     return {"action": action, "order": read_json(path), "output": relative_path(output) if output else None}
 
 
@@ -229,7 +257,7 @@ class WorkbenchHandler(BaseHTTPRequestHandler):
         parsed = urlparse(self.path)
         try:
             if parsed.path == "/api/state":
-                self.send_json({"orders": list_orders(), "manifest": manifest_rows()})
+                self.send_json({"orders": list_orders(), "manifest": manifest_rows(), "references": reference_assets()})
                 return
             if parsed.path == "/api/file":
                 query = parse_qs(parsed.query)

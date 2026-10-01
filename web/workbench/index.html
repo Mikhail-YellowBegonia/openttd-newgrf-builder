@@ -66,6 +66,11 @@
             <div class="field"><label>背景处理</label><select id="background_method"><option value="mask_file" selected>人工 mask</option><option value="flood_fill">flood fill（仅初筛）</option><option value="none">不处理</option></select></div>
           </div>
           <div class="section-title">参考图</div>
+          <div class="reference-picker">
+            <div class="field"><label for="referenceAsset">常备网格参考资产</label><select id="referenceAsset"><option value="">读取中…</option></select></div>
+            <div class="reference-preview" id="referenceAssetPreview"><span class="hint">读取中…</span></div>
+            <div class="hint mono" id="referenceAssetMeta"></div>
+          </div>
           <div class="grid2">
             <div class="field"><label>风格参考 URI / 备注</label><input id="reference_style" placeholder="assets/references/..."></div>
             <div class="field"><label>建筑参考 URI / 备注</label><input id="reference_architecture" placeholder="照片、立面、屋顶资料"></div>
@@ -131,7 +136,7 @@
     <aside class="right">
       <section class="section"><div class="section-title">生成结果</div><div class="preview" id="sourcePreview"><span class="hint">尚未上传图像</span></div></section>
       <section class="section"><div class="section-title">工单 JSON 摘要</div><pre class="panel mono small" id="orderSummary">{}</pre></section>
-      <section class="section"><div class="section-title">已登记素材</div><div id="manifestList" class="small hint">读取中…</div></section>
+      <section class="section"><div class="section-title">已登记素材总览</div><div id="manifestList" class="small hint">读取中…</div></section>
     </aside>
   </main>
   <script src="/workbench/app.js"></script>

@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "source": "/Users/Administrator/Desktop/kos/ttd/assets/work/cn_workbench_test_01-zi4.png",
+  "template_id": "isometric-1x1-h8",
+  "footprint": "1x1",
+  "tiles": [
+    {
+      "tile": [
+        0,
+        0
+      ],
+      "key": "0,0",
+      "file": "tile-0-0.png",
+      "canvas": [
+        768,
+        1408
+      ],
+      "ground_polygon": [
+        [
+          384,
+          1152
+        ],
+        [
+          512,
+          1216
+        ],
+        [
+          384,
+          1280
+        ],
+        [
+          256,
+          1216
+        ]
+      ]
+    }
+  ],
+  "status": "art-split-only; House compiler integration pending"
+}
